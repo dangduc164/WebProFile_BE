@@ -1,20 +1,11 @@
-<script>
-import Layout from "../Layout";
+<template>
+  <Layout>
+    <router-view />
+  </Layout>
+</template>
 
-export default {
-  name: "App",
-  components: {
-    Layout,
-  },
-};
+<script setup>
+import Layout from "@/Layout";
 </script>
 
 <style scoped></style>
-
-<template>
-  <main>
-    <Layout>
-      <router-view />
-    </Layout>
-  </main>
-</template>

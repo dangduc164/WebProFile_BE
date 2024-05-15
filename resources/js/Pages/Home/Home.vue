@@ -6,10 +6,10 @@
           class="flex flex-wrap list-reset pt-3 pb-3 py-4 px-4 mb-4 bg-gray-200 rounded"
         >
           <li class="inline-block px-2 py-2 text-gray-700">
-            <a href="/">home</a>
+            <router-link to="/">home</router-link>
           </li>
           <li class="inline-block px-2 py-2 text-gray-700">
-            <a href="/about">about</a>
+            <router-link to="/about">about</router-link>
           </li>
           <li class="inline-block px-2 py-2 text-gray-700 active" aria-current="page">
             <router-link to="/contact">Contact</router-link>
@@ -23,160 +23,185 @@
         </ol>
       </nav>
 
-      <div class="flex flex-wrap gutters-sm mx-[-1rem]">
-        <div class="w-full md:w-1/3 px-4 mb-3">
-          <div
-            class="relative flex flex-col min-w-0 rounded break-words border bg-white border-1 border-gray-300"
-          >
-            <div class="flex-auto p-6">
-              <div class="flex flex-col items-center text-center">
-                <img
-                  :src="dataProfile?.avatar"
-                  alt="avatar"
-                  class="rounded-full max-w-[150px] max-h-[150px]"
-                  width="{150}"
-                />
-                <div class="mt-3">
-                  <h4>{{ dataProfile?.last_name }} {{ dataProfile?.frist_name }}</h4>
-                  <p class="text-gray-600 mb-1">
-                    {{ dataProfile?.position_application }}
-                  </p>
-                  <p class="text-gray-700 font-size-sm">{{ dataProfile?.address }}</p>
+      <Form
+        v-slot="{ handleSubmit }"
+        :initial-values="dataProfile"
+        :validation-schema="schemaDataProfile"
+        class="w-full"
+      >
+        <div class="flex flex-wrap gutters-sm mx-[-1rem]">
+          <div class="w-full md:w-1/3 px-4 mb-3">
+            <div
+              class="relative flex flex-col min-w-0 rounded break-words border bg-white border-1 border-gray-300"
+            >
+              <div class="flex-auto p-6">
+                <div class="flex flex-col items-center text-center">
+                  <img
+                    :src="dataProfile?.infor?.avatar"
+                    alt="avatar"
+                    class="rounded-full max-w-[150px] max-h-[150px]"
+                    width="{150}"
+                  />
+                  <div class="mt-3">
+                    <h4>{{ dataProfile?.infor?.full_name }}</h4>
+                    <p class="text-gray-600 mb-1">
+                      {{ dataProfile?.infor?.position_application }}
+                    </p>
+                    <p class="text-gray-700 font-size-sm">
+                      {{ dataProfile?.infor?.address }}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div
-            class="relative flex flex-col min-w-0 rounded break-words border bg-white border-1 border-gray-300 mt-3"
-          >
-            <ul class="flex flex-col pl-0 mb-0 border rounded border-gray-300">
-              <li
-                v-for="(item, index) in listLinkSocial"
-                :key="index"
-                class="relative block py-3 px-6 -mb-px border border-r-0 border-l-0 border-gray-300 no-underline flex justify-between items-center flex-wrap"
-              >
-                <h6 class="mb-0">
-                  <span class="inline-block align-middle mr-2" v-html="item?.icon"></span>
-                  {{ item?.label }}
-                </h6>
-                <router-link
-                  to="{item?.link}"
-                  class="text-sm text-gray-600 hover:text-[#5bc956]"
-                  :target="item?.link && item?.link !== '' ? '_blank' : '_self'"
+            <div
+              class="relative flex flex-col min-w-0 rounded break-words border bg-white border-1 border-gray-300 mt-3"
+            >
+              <ul class="flex flex-col pl-0 mb-0 border rounded border-gray-300">
+                <li
+                  v-for="(item, index) in listLinkSocial"
+                  :key="index"
+                  class="relative block py-3 px-6 -mb-px border border-r-0 border-l-0 border-gray-300 no-underline flex justify-between items-center flex-wrap"
                 >
-                  More
-                </router-link>
-              </li>
-            </ul>
+                  <h6 class="mb-0">
+                    <span
+                      class="inline-block align-middle mr-2"
+                      v-html="item?.icon"
+                    ></span>
+                    {{ item?.label }}
+                  </h6>
+                  <router-link
+                    to="{item?.link}"
+                    class="text-sm text-gray-600 hover:text-[#5bc956]"
+                    :target="item?.link && item?.link !== '' ? '_blank' : '_self'"
+                  >
+                    More
+                  </router-link>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="md:w-2/3 pr-4 pl-4">
+            <div
+              class="relative flex flex-col min-w-0 rounded break-words border bg-white border-1 border-gray-300 mb-3"
+            >
+              <div class="flex-auto p-6">
+                <div
+                  class="flex items-center justify-between border-b-2 border-teal-500 pb-1"
+                >
+                  <h3 class="text-2xl text-teal-500 text-semibold">
+                    <i class="fa-solid fa-id-card mr-2"></i>
+                    Information
+                  </h3>
+                </div>
+                <div class="flex flex-wrap items-center min-h-8">
+                  <div class="sm:w-1/4 px-4">
+                    <h6 class="mb-0">Full Name</h6>
+                  </div>
+
+                  <div class="sm:w-3/4 pr-4 pl-4 text-gray-600">
+                    <Field
+                      class="w-full px-2 focus-visible:outline-none"
+                      readonly
+                      type="text"
+                      v-model="dataProfile.infor.full_name"
+                      name="full_name"
+                    />
+                  </div>
+                </div>
+                <hr />
+                <div class="flex flex-wrap items-center min-h-8">
+                  <div class="sm:w-1/4 px-4">
+                    <h6 class="mb-0">Date of birth</h6>
+                  </div>
+                  <div class="sm:w-3/4 pr-4 pl-4 text-gray-600">
+                    {{ dataProfile.infor?.birthday }}
+                  </div>
+                </div>
+                <hr />
+                <div class="flex flex-wrap items-center min-h-8">
+                  <div class="sm:w-1/4 px-4">
+                    <h6 class="mb-0">Email</h6>
+                  </div>
+                  <div class="sm:w-3/4 pr-4 pl-4 text-gray-600">
+                    {{ dataProfile.infor?.email }}
+                  </div>
+                </div>
+                <hr />
+                <div class="flex flex-wrap items-center min-h-8">
+                  <div class="sm:w-1/4 px-4">
+                    <h6 class="mb-0">Phone</h6>
+                  </div>
+                  <div class="sm:w-3/4 pr-4 pl-4 text-gray-600">
+                    {{ dataProfile.infor?.phone_number }}
+                  </div>
+                </div>
+                <hr />
+                <div class="flex flex-wrap items-center min-h-8">
+                  <div class="sm:w-1/4 px-4">
+                    <h6 class="mb-0">Address</h6>
+                  </div>
+                  <div class="sm:w-3/4 pr-4 pl-4 text-gray-600">
+                    {{ dataProfile.infor?.address }}
+                  </div>
+                </div>
+                <hr />
+              </div>
+            </div>
+
+            <div
+              class="relative flex flex-col min-w-0 rounded break-words border bg-white border-1 border-gray-300 mt-3"
+              v-for="(item, index) in dataProfile.content"
+              :key="index"
+            >
+              <div class="p-6">
+                <h3
+                  class="text-2xl text-teal-500 text-semibold border-b-2 border-teal-500 mb-2 flex items-center"
+                >
+                  <i class="fa-solid fa-briefcase mr-2"></i>
+                  <Field
+                    class="w-full skin-input rounded-md resize-y h-auto js-resize-y-textarea"
+                    :name="`title-[${index}]`"
+                    v-model="item.title"
+                  />
+                </h3>
+                <!-- <div
+                  class="whitespace-pre-wrap leading-normal"
+                  v-html="careerGoals"
+                ></div> -->
+                <Field
+                  class="w-full border border-gray-300 min-h-[150px] p-2 skin-input rounded-md resize-y h-auto js-resize-y-textarea"
+                  type="text"
+                  as="textarea"
+                  name="careerGoals"
+                  v-model="dataProfile.content[0].desc"
+                />
+              </div>
+            </div>
+            <div class="flex justify-end mt-2">
+              <buton
+                class="c-btn flex items-center justify-center"
+                @click="handleSubmit($event, handleSubmitForm)"
+              >
+                Save
+              </buton>
+            </div>
           </div>
         </div>
-        <div class="md:w-2/3 pr-4 pl-4">
-          <div
-            class="relative flex flex-col min-w-0 rounded break-words border bg-white border-1 border-gray-300 mb-3"
-          >
-            <div class="flex-auto p-6">
-              <h3
-                class="text-2xl text-teal-500 text-semibold border-b-2 border-teal-500 mb-2"
-              >
-                <i class="fa-solid fa-id-card mr-2"></i>
-                Information
-              </h3>
-              <div class="flex flex-wrap items-center min-h-8">
-                <div class="sm:w-1/4 px-4">
-                  <h6 class="mb-0">Full Name</h6>
-                </div>
-                <div class="sm:w-3/4 pr-4 pl-4 text-gray-600">
-                  {{ `${dataProfile?.last_name} ${dataProfile?.frist_name} ` }}
-                </div>
-              </div>
-              <hr />
-              <div class="flex flex-wrap items-center min-h-8">
-                <div class="sm:w-1/4 px-4">
-                  <h6 class="mb-0">Date of birth</h6>
-                </div>
-                <div class="sm:w-3/4 pr-4 pl-4 text-gray-600">
-                  {{ dataProfile?.birthday }}
-                </div>
-              </div>
-              <hr />
-              <div class="flex flex-wrap items-center min-h-8">
-                <div class="sm:w-1/4 px-4">
-                  <h6 class="mb-0">Email</h6>
-                </div>
-                <div class="sm:w-3/4 pr-4 pl-4 text-gray-600">
-                  {{ dataProfile?.email }}
-                </div>
-              </div>
-              <hr />
-              <div class="flex flex-wrap items-center min-h-8">
-                <div class="sm:w-1/4 px-4">
-                  <h6 class="mb-0">Phone</h6>
-                </div>
-                <div class="sm:w-3/4 pr-4 pl-4 text-gray-600">
-                  {{ dataProfile?.phone_number }}
-                </div>
-              </div>
-              <hr />
-              <div class="flex flex-wrap items-center min-h-8">
-                <div class="sm:w-1/4 px-4">
-                  <h6 class="mb-0">Address</h6>
-                </div>
-                <div class="sm:w-3/4 pr-4 pl-4 text-gray-600">
-                  {{ dataProfile?.address }}
-                </div>
-              </div>
-              <hr />
-            </div>
-          </div>
-
-          <div
-            class="relative flex flex-col min-w-0 rounded break-words border bg-white border-1 border-gray-300 mb-3"
-          >
-            <div class="p-6">
-              <h3
-                class="text-2xl text-teal-500 text-semibold border-b-2 border-teal-500 mb-2"
-              >
-                <i class="fa-solid fa-briefcase mr-2"></i>
-                Career Goals
-              </h3>
-              <div class="whitespace-pre-wrap leading-normal" v-html="careerGoals"></div>
-            </div>
-          </div>
-
-          <div
-            class="relative flex flex-col min-w-0 rounded break-words border bg-white border-1 border-gray-300 mb-3"
-          >
-            <div class="p-6">
-              <h3
-                class="text-2xl text-teal-500 text-semibold border-b-2 border-teal-500 mb-2"
-              >
-                <i class="fa-solid fa-school mr-2"></i>
-                Education
-              </h3>
-              <div class="whitespace-pre-wrap leading-normal" v-html="careerGoals"></div>
-            </div>
-          </div>
-
-          <div
-            class="relative flex flex-col min-w-0 rounded break-words border bg-white border-1 border-gray-300 mb-3"
-          >
-            <div class="p-6">
-              <h3
-                class="text-2xl text-teal-500 text-semibold border-b-2 border-teal-500 mb-2"
-              >
-                <i class="fa-solid fa-briefcase mr-2"></i>
-                Career Goals
-              </h3>
-              <div class="whitespace-pre-wrap leading-normal" v-html="careerGoals"></div>
-            </div>
-          </div>
-        </div>
-      </div>
+      </Form>
     </div>
   </div>
 </template>
 
 <script setup>
+import { Field, Form } from "vee-validate";
+import { ref } from "vue";
+import ChangeInfor from "@/Components/Modals/ChangeInfor";
+
+const open = ref(false);
+const isEdit = ref(false);
+
 const listLinkSocial = [
   {
     id: 2,
@@ -204,22 +229,63 @@ const listLinkSocial = [
   },
 ];
 
-const dataProfile = {
-  last_name: "Nguyen Dang",
-  frist_name: "Duc",
-  job: "Frontend Developer",
-  birthday: "11/10/2001",
-  email: "ducden164@gmail.com",
-  address: "Phuc Cau village, Thuy Huong commune, Chuong My district, Hanoi city",
-  phone_number: "0967771606",
-  avatar: "https://bootdey.com/img/Content/avatar/avatar7.png",
-  position_application: "Fullstack Developer",
-};
-
 const careerGoals = `- In the short term: Efforts in the shortest time to meet job requirements. Become an official employee of the company. \n
 - Learn and absorb new technological knowledge. \n
 - In the long term: Become a professional programmer and stay with the company for a long time. Promote and become a Leader.
 `;
+
+const dataProfile = ref({
+  infor: {
+    full_name: "Nguyen Dang Duc",
+    birthday: "11/10/2001",
+    email: "ducden164@gmail.com",
+    address: "Phuc Cau village, Thuy Huong commune, Chuong My district, Hanoi city",
+    phone_number: "0967771606",
+    avatar: "https://bootdey.com/img/Content/avatar/avatar7.png",
+    position_application: "Fullstack Developer",
+  },
+
+  content: [
+    {
+      title: "1",
+      desc: `- In the short term: Efforts in the shortest time to meet job requirements. Become an official employee of the company. \n
+- Learn and absorb new technological knowledge. \n
+- In the long term: Become a professional programmer and stay with the company for a long time. Promote and become a Leader.
+`,
+    },
+  ],
+});
+
+console.log(dataProfile.value);
+const handleShowModalInfor = () => {
+  open.value = true;
+};
+const handleOk = () => {
+  open.value = false;
+};
+
+const handleEdit = () => {
+  isEdit.value = true;
+};
+
+const handleUpdateOrCreate = () => {
+  try {
+    isEdit.value = false;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const handleAddRowContent = () => {
+  dataProfile.value.content.push({
+    title: "1",
+    desc: "This is an example description.",
+  });
+};
+
+const handleSubmitForm = (data) => {
+  console.log("submit form", dataProfile.value);
+};
 </script>
 
 <style scoped></style>

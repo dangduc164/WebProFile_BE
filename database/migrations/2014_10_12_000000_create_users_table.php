@@ -14,8 +14,11 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->tinyInteger('active');
-            $table->string('first_name');
-            $table->string('last_name');
+            $table->string('full_name');
+            $table->string('day');
+            $table->string('month');
+            $table->string('year');
+            $table->string('birthday_inder');
             $table->string('address');
             $table->string('avatar')->nullable();
             $table->string('gender');

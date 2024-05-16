@@ -14,10 +14,10 @@ const routes = [
 
 const router = createRouter({
     history: createMemoryHistory(),
-    linkActiveClass: 'active',
-    scrollBehavior() {
-        return { top: 0, left: 0, behavior: 'smooth' }
-    },
+    // linkActiveClass: 'active',
+    // scrollBehavior() {
+    //     return { top: 0, left: 0, behavior: 'smooth' }
+    // },
     routes,
 })
 

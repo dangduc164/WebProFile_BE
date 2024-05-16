@@ -11,8 +11,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('profiles', function (Blueprint $table) {
+        Schema::create('profiles_content', function (Blueprint $table) {
             $table->id();
+            $table->string('user_id');
+            $table->string('icon');
+            $table->string('title');
+            $table->string('description');
+            $table->string('order_number');
+            $table->timestamps();
+        });
+
+        Schema::create('profiles_social', function (Blueprint $table) {
+            $table->id();
+            $table->string('user_id');
+            $table->string('title');
+            $table->string('link_url');
+            $table->string('order_number');
             $table->timestamps();
         });
     }
@@ -22,6 +36,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('profiles');
+        Schema::dropIfExists('profiles_content');
+        Schema::dropIfExists('profiles_social');
     }
 };

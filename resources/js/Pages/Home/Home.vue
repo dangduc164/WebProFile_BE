@@ -1,28 +1,6 @@
 <template>
   <div class="container mx-auto px-4">
     <div class="main-body pt-5 md:py-10">
-      <!-- <nav aria-label="breadcrumb" class="main-breadcrumb">
-        <ol
-          class="flex flex-wrap list-reset pt-3 pb-3 py-4 px-4 mb-4 bg-gray-200 rounded"
-        >
-          <li class="inline-block px-2 py-2 text-gray-700">
-            <router-link to="/">home</router-link>
-          </li>
-          <li class="inline-block px-2 py-2 text-gray-700">
-            <router-link to="/about">about</router-link>
-          </li>
-          <li class="inline-block px-2 py-2 text-gray-700 active" aria-current="page">
-            <router-link to="/contact">Contact</router-link>
-          </li>
-          <li class="inline-block px-2 py-2 text-gray-700 active" aria-current="page">
-            <router-link to="/login">Login</router-link>
-          </li>
-          <li class="inline-block px-2 py-2 text-gray-700 active" aria-current="page">
-            <router-link to="/register">register</router-link>
-          </li>
-        </ol>
-      </nav> -->
-
       <Form
         v-slot="{ handleSubmit }"
         :initial-values="dataProfile"
@@ -126,7 +104,7 @@
                 <hr />
                 <div class="flex flex-wrap items-center min-h-8">
                   <div class="sm:w-1/4 px-4">
-                    <h6 class="mb-0">Date of birth</h6>
+                    <h6 class="mb-0">BirthDay / Gender</h6>
                   </div>
                   <div class="sm:w-3/4 text-gray-600 flex items-center gap-2">
                     <Field
@@ -183,6 +161,24 @@
                         class="text-[#222]"
                       >
                         {{ item }}
+                      </option>
+                    </Field>
+                    <Field
+                      class="w-full px-4 skin-input rounded-md"
+                      type="text"
+                      as="select"
+                      v-model="dataProfile.infor.gender"
+                      name="gender"
+                      :class="{ no_value: dataProfile.infor.gender == '' }"
+                    >
+                      <option value="" hidden disabled selected>Male</option>
+                      <option
+                        v-for="(item, index) in listGenders"
+                        :key="index"
+                        :value="item.value"
+                        class="text-[#222]"
+                      >
+                        {{ item.label }}
                       </option>
                     </Field>
                   </div>
@@ -314,6 +310,21 @@ const toast = inject("$toast");
 const typeImage = ref("");
 const dateFormatList = ["DD/MM/YYYY", "DD/MM/YY"];
 
+const listGenders = ref([
+  {
+    value: 0,
+    label: "Male",
+  },
+  {
+    value: 1,
+    label: "Female",
+  },
+  {
+    value: 2,
+    label: "Other",
+  },
+]);
+
 const dataProfile = ref({
   list_link_social: [
     {
@@ -343,6 +354,7 @@ const dataProfile = ref({
   ],
   infor: {
     full_name: "Nguyen Dang Duc",
+    gender: "",
     day: "",
     month: "",
     year: "",

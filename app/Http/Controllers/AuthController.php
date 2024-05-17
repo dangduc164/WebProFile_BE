@@ -24,8 +24,8 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
+
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|between:2,100',
             'email' => 'required|string|email|max:100|unique:users',
             'password' => 'required|string|min:6',
         ]);
@@ -37,7 +37,7 @@ class AuthController extends Controller
         $user = User::create(array_merge(
             $validator->validated(),
             ['password' => bcrypt($request->password)],
-            ['active' => 1]
+            ['active' => 0]
         ));
 
         return response()->json([
@@ -46,6 +46,19 @@ class AuthController extends Controller
         ], 201);
     }
 
+
+
+    /**
+     * Log the user out (Invalidate the token).
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function logout()
+    {
+        auth()->logout();
+
+        return response()->json(['message' => 'User successfully signed out']);
+    }
 
 
     /**
@@ -87,15 +100,15 @@ class AuthController extends Controller
         ]);
     }
 
-    // protected function createNewToken($token)
-    // {
-    //     return response()->json([
-    //         'access_token' => $token,
-    //         'token_type' => 'bearer',
-    //         'expires_in' => auth()->factory()->getTTL() * 60,
-    //         'user' => auth()->user()
-    //     ]);
-    // }
+    protected function createNewToken($token)
+    {
+        return response()->json([
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            // 'expires_in' => auth()->factory()->getTTL() * 60,
+            'user' => auth()->user()
+        ]);
+    }
 
     public function changePassWord(Request $request)
     {
@@ -124,4 +137,5 @@ class AuthController extends Controller
             'user' => $user,
         ], 201);
     }
+
 }

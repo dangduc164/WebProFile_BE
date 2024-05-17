@@ -8,18 +8,10 @@ use Illuminate\Http\Request;
 class ProfileController extends Controller
 {
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function createOrUpdate(Request $request)
+    public function uploadAvatar(Request $request): JsonResponse
     {
-        //
-    }
 
-
-
-    public function uploadFiles(Request $request): JsonResponse
-    {
+        // dd($request->toArray());
         if (!$request->hasFile('file')) {
             return response()->json([
                 'status' => 400,
@@ -53,12 +45,63 @@ class ProfileController extends Controller
             'length' => filesize($file), //byte
             'extension' => $extension
         ]);
+
+        // dd($request->file('image'));
+        // $image = $request->file('image');
+        // $imageName = time() . '.' . $image->getClientOriginalExtension();
+        // $path = $image->store('public/images', $imageName);
+
+        // return response()->json([
+        //   'message' => 'Image uploaded successfully!',
+        //   'image' => $path,
+        // ]);
     }
+
+
+
     /**
-     * Remove the specified resource from storage.
+     * @param AreaOptionUpdateRequest $request
+     * @param  int  $id
+     * @return JsonResponse
+     * @throws RecordNotFoundException
      */
-    public function destroy(string $id)
-    {
-        //
-    }
+    // public function update(AreaOptionUpdateRequest $request, $id): JsonResponse
+    // {
+    //     $area = TsAreaOption::find($id);
+
+    //     if(!$area){
+    //         $response = [
+    //             'data' => null,
+    //             'message' => 'Not found item area option'
+    //         ];
+    //         return response()->json($response, 404);
+    //     }
+
+    //     //delete old icon
+    //     $old_icon_path =  $area->icon_path;
+    //     if (file_exists($old_icon_path)) {
+    //         unlink($old_icon_path);
+    //     }
+
+    //     $area->update($request->all());
+    //     $content = TsAreaOptionContent::where("ts_area_option_id", $id)->delete();
+    //     foreach($request->all()['contents'] as $item) {
+    //         TsAreaOptionContent::updateOrCreate(
+    //             [
+    //                'id'   => $item['id'],
+    //             ],
+    //             [
+    //                'ts_area_option_id' =>  $item['ts_area_option_id'],
+    //                'title' =>  $item['title'],
+    //                'description' =>  $item['description'],
+    //             ],
+    //         );
+    //     }
+
+    //     $response = [
+    //         'data' => $area
+    //     ];
+    //     return response()->json($response, 200);
+
+    // }
 }

@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('profiles_content', function (Blueprint $table) {
             $table->id();
             $table->string('user_id');
-            $table->string('icon');
-            $table->string('title');
+            $table->string('icon', 255);
+            $table->string('title', 255);
             $table->string('description');
             $table->string('order_number');
             $table->timestamps();
@@ -24,8 +24,9 @@ return new class extends Migration
         Schema::create('profiles_social', function (Blueprint $table) {
             $table->id();
             $table->string('user_id');
-            $table->string('title');
-            $table->string('link_url');
+            $table->string('icon', 255);
+            $table->string('title', 255);
+            $table->string('link_url', 255);
             $table->string('order_number');
             $table->timestamps();
         });

@@ -1,23 +1,25 @@
-import { createMemoryHistory, createRouter } from 'vue-router'
+import { createWebHistory, createRouter } from 'vue-router'
 
-import Home from '@/Pages/Home'
-import NotFound from '@/Components/NotfoundPage'
-import Register from '@/Pages/RegisterPage'
-import Login from '@/Pages/LoginPage'
+
+const Home = () => import('@/Pages/Home')
+const NotFound = () => import('@/Components/NotfoundPage')
+const Register = () => import('@/Pages/RegisterPage')
+const Login = () => import('@/Pages/LoginPage')
+
 
 const routes = [
     { path: '/', component: Home },
     { path: '/login', component: Login },
     { path: '/register', component: Register },
-    { path: '/:any(.*)*', component: NotFound },
+    { path: '/:pathMatch(.*)*', component: NotFound }
 ]
 
 const router = createRouter({
-    history: createMemoryHistory(),
-    // linkActiveClass: 'active',
-    // scrollBehavior() {
-    //     return { top: 0, left: 0, behavior: 'smooth' }
-    // },
+    history: createWebHistory(),
+    linkActiveClass: 'active',
+    scrollBehavior() {
+        return { top: 0, left: 0, behavior: 'smooth' }
+    },
     routes,
 })
 

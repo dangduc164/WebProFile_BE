@@ -325,6 +325,10 @@ import draggable from "vuedraggable";
 import moment from "moment/moment";
 import Loading from "@/Components/Loading";
 import { uploadAvatarApi } from "@/api";
+import { useStore } from "vuex";
+import { MODULE_STORE } from "@/const";
+
+const store = useStore();
 
 const toast = inject("$toast");
 const typeImage = ref("");
@@ -451,15 +455,16 @@ const handleUploadImg = async (e) => {
   const formData = new FormData();
   formData.append("file", image);
   formData.append("type", "image");
+
   try {
     isLoading.value = true;
     const res = await uploadAvatarApi(formData);
+    toast.success("upload avatar success");
   } catch (errors) {
     const error = errors.message || t("common.has_error");
     toast.error(error);
   } finally {
     isLoading.value = false;
-    toast.success("upload avatar success");
   }
 };
 

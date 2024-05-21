@@ -11,6 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Schema::dropIfExists('profiles_content');
         Schema::create('profiles_content', function (Blueprint $table) {
             $table->id();
             $table->string('user_id');
@@ -21,13 +22,22 @@ return new class extends Migration
             $table->timestamps();
         });
 
+        Schema::dropIfExists('profiles_social');
         Schema::create('profiles_social', function (Blueprint $table) {
             $table->id();
             $table->string('user_id');
             $table->string('icon', 255);
             $table->string('title', 255);
-            $table->string('link_url', 255);
+            $table->string('link_url');
             $table->string('order_number');
+            $table->timestamps();
+        });
+
+        Schema::dropIfExists('profiles_avatars');
+        Schema::create('profiles_avatars', function (Blueprint $table) {
+            $table->id();
+            $table->string('user_id');
+            $table->string('avatar_url');
             $table->timestamps();
         });
     }
@@ -39,5 +49,6 @@ return new class extends Migration
     {
         Schema::dropIfExists('profiles_content');
         Schema::dropIfExists('profiles_social');
+        Schema::dropIfExists('profiles_avatars');
     }
 };

@@ -16,12 +16,12 @@ return new class extends Migration
             $table->tinyInteger('active')->default(0)->comment('0: Active, 1: Inactive');
             $table->string('full_name', 255);
             $table->string('work_experience', 255);
+            $table->string('phone_number', 255);
             $table->string('day');
             $table->string('month');
             $table->string('year');
             $table->string('birthday_inder', 255);
             $table->string('address', 500);
-            $table->string('avatar')->nullable();
             $table->string('gender', 50);
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();

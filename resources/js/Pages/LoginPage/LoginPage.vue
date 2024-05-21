@@ -1,5 +1,6 @@
 <template>
-  <div class="py-16  ">
+  <Loading v-if="isLoading" />
+  <div class="py-16">
     <div
       class="flex bg-white rounded-lg shadow-lg overflow-hidden mx-auto max-w-sm lg:max-w-4xl"
     >
@@ -12,7 +13,7 @@
       <div class="w-full p-8 lg:w-1/2">
         <h2 class="text-2xl font-semibold text-gray-700 text-center">Brand</h2>
         <p class="text-xl text-gray-600 text-center">Welcome back!</p>
-        <a
+        <!-- <a
           href="#"
           class="flex items-center justify-center mt-4 text-white rounded-lg shadow-md hover:bg-gray-100"
         >
@@ -39,7 +40,7 @@
           <h1 class="px-4 py-3 w-5/6 text-center text-gray-600 font-bold">
             Sign in with Google
           </h1>
-        </a>
+        </a> -->
         <div class="mt-4 flex items-center justify-between">
           <span class="border-b w-1/5 lg:w-1/4"></span>
           <a href="#" class="text-xs text-center text-gray-500 uppercase"
@@ -47,39 +48,94 @@
           >
           <span class="border-b w-1/5 lg:w-1/4"></span>
         </div>
-        <div class="mt-4">
-          <label class="block text-gray-700 text-sm font-bold mb-2">Email Address</label>
-          <input
-            class="bg-gray-200 text-gray-700 focus:outline-none focus:shadow-outline border border-gray-300 rounded py-2 px-4 block w-full appearance-none"
-            type="email"
-          />
-        </div>
-        <div class="mt-4">
-          <div class="flex justify-between">
-            <label class="block text-gray-700 text-sm font-bold mb-2">Password</label>
-            <a href="#" class="text-xs text-gray-500">Forget Password?</a>
+        <Form v-slot="{ handleSubmit }">
+          <div class="mt-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2"
+              >Email Address</label
+            >
+            <Field
+              class="bg-gray-200 text-gray-700 focus:outline-none focus:shadow-outline border border-gray-300 rounded py-2 px-4 block w-full appearance-none"
+              type="email"
+              name="email"
+              v-model="userLogin.email"
+            />
           </div>
-          <input
-            class="bg-gray-200 text-gray-700 focus:outline-none focus:shadow-outline border border-gray-300 rounded py-2 px-4 block w-full appearance-none"
-            type="password"
-          />
-        </div>
-        <div class="mt-8">
-          <button
-            class="bg-gray-700 text-white font-bold py-2 px-4 w-full rounded hover:bg-gray-600"
-          >
-            Login
-          </button>
-        </div>
+          <div class="mt-4">
+            <div class="flex justify-between">
+              <label class="block text-gray-700 text-sm font-bold mb-2">Password</label>
+              <router-link
+                to="/forget-password"
+                class="text-xs text-gray-500 skin-text-link"
+              >
+                Forget Password?
+              </router-link>
+            </div>
+            <Field
+              class="bg-gray-200 text-gray-700 focus:outline-none focus:shadow-outline border border-gray-300 rounded py-2 px-4 block w-full appearance-none"
+              v-model="userLogin.password"
+              type="password"
+              name="password"
+            />
+          </div>
+          <div class="mt-8">
+            <button
+              class="bg-gray-700 text-white font-bold py-2 px-4 w-full rounded hover:bg-gray-600"
+              @click="handleSubmit($event, handleLogin)"
+            >
+              Login
+            </button>
+          </div>
+        </Form>
         <div class="mt-4 flex items-center justify-between">
           <span class="border-b w-1/5 md:w-1/4"></span>
-          <a href="#" class="text-xs text-gray-500 uppercase">or sign up</a>
+          <router-link
+            to="/register"
+            class="text-xs text-gray-500 uppercase skin-text-link"
+            >or sign up</router-link
+          >
           <span class="border-b w-1/5 md:w-1/4"></span>
         </div>
       </div>
     </div>
   </div>
 </template>
-<script setup></script>
+<script setup>
+import { ref, inject } from "vue";
+import { Field, Form } from "vee-validate";
+import Loading from "@/Components/Loading";
+import { setToken, removeToken, getToken } from "@/utils/authToken";
+import { TYPE_USER, ROUTER_PATH, MODULE_STORE } from "@/const";
+
+import { login } from "@/api";
+import router from "../../router";
+import { useStore } from "vuex";
+
+const toast = inject("$toast");
+const store = useStore();
+
+const isLoading = ref(false);
+const userLogin = ref({
+  email: "",
+  password: "",
+});
+
+const handleLogin = async () => {
+  try {
+    store.state[MODULE_STORE.COMMON.NAME].isLoadingPage = true;
+    const res = await login(userLogin.value);
+    const { access_token, expires_in } = res;
+    if (getToken(TYPE_USER.USER)) removeToken(TYPE_USER.USER);
+    setToken(access_token, expires_in, TYPE_USER.ADMIN);
+    toast.success("Login success");
+    console.log("store111111111", store);
+  } catch (error) {
+    toast.error(error.message);
+  } finally {
+    setTimeout(() => {
+      store.state[MODULE_STORE.COMMON.NAME].isLoadingPage = true;
+    }, 3000);
+  }
+};
+</script>
 
 <style lang="scss" scoped></style>

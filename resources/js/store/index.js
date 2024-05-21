@@ -1,38 +1,13 @@
-// import { defineStore } from "pinia";
+import { createStore } from "vuex";
+import { MODULE_STORE } from "@/const";
+import auth from "./modules/auth";
+import common from "./modules/common";
 
-// const useCustomer = defineStore("customer", {
-//     state: () => ({
-//         isLoading: false,
-//     }),
-//     getters: {
-//     },
-//     actions: {
-//     },
-// });
-// export default useCustomer;
-
-
-import Vuex from 'vuex'
-const state = {
-    loading: false,
-}
-
-const mutations = {
-    setLoading(state, value) {
-        state.loading = value
+const store = createStore({
+    modules: {
+        [MODULE_STORE.AUTH.NAME]: auth,
+        [MODULE_STORE.COMMON.NAME]: common,
     },
+});
 
-}
-
-const getters = {
-    isLoading(state) {
-        return state.loading
-    },
-
-}
-
-export default new Vuex.Store({
-    state,
-    mutations,
-    getters
-})
+export default store;

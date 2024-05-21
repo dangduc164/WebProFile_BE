@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ProfilesAvatar;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -38,6 +39,10 @@ class ProfileController extends Controller
 
         $informationImage = getimagesize($file);
         $path = $file->store('public/images/avatar');
+        $profileAvatar = new ProfilesAvatar();
+        $profileAvatar->avatar_url = $path;
+        $profileAvatar->save();
+
 
         return response()->json([
             'path_file' => $path,
@@ -45,16 +50,6 @@ class ProfileController extends Controller
             'length' => filesize($file), //byte
             'extension' => $extension
         ]);
-
-        // dd($request->file('image'));
-        // $image = $request->file('image');
-        // $imageName = time() . '.' . $image->getClientOriginalExtension();
-        // $path = $image->store('public/images', $imageName);
-
-        // return response()->json([
-        //   'message' => 'Image uploaded successfully!',
-        //   'image' => $path,
-        // ]);
     }
 
 

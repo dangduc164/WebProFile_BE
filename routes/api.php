@@ -20,10 +20,14 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::group(['prefix' => 'auth'], function () {
+    Route::post('/login', [AuthController::class, 'login'])->name('login');
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::post('/register', [AuthController::class, 'register'])->name('register');
+});
+
 
 
 Route::group(['prefix' => 'admin'], function () {
     Route::post('/upload-avatar', [ProfileController::class, 'uploadAvatar'])->name('upload-avatar');
-    Route::post('/login', [AuthController::class, 'login'])->name('login');
-    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });

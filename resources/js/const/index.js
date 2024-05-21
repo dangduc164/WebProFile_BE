@@ -1,6 +1,7 @@
 export const ROUTER_PATH = {
     ADMIN: '/admin',
     LOGIN: '/admin/login',
+    REGISTER: '/admin/register',
 }
 
 export const ROUTE_NAME = {
@@ -23,3 +24,22 @@ export const STATUS_CODE = {
     ValidationFailed: 422,
     InternalServerError: 500,
 };
+
+
+export const MODULE_STORE = {
+    AUTH: {
+        NAME: "AUTH",
+        GETTERS: {},
+        ACTIONS: {},
+        MUTATIONS: {},
+    },
+
+    COMMON: {
+        NAME: "COMMON",
+        GETTERS: {
+            GET_IS_LOADING: "GET_IS_LOADING",
+        },
+        ACTIONS: {},
+        MUTATIONS: {},
+    },
+}

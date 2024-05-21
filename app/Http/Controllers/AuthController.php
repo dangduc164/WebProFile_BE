@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
@@ -26,24 +28,27 @@ class AuthController extends Controller
     {
 
         $validator = Validator::make($request->all(), [
-            'email' => 'required|string|email|max:100|unique:users',
+            'email' => 'required|email',
             'password' => 'required|string|min:6',
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors()->toJson(), 400);
+            return response()->json($validator->errors(), 422);
         }
 
-        $user = User::create(array_merge(
-            $validator->validated(),
-            ['password' => bcrypt($request->password)],
-            ['active' => 0]
-        ));
+        if (!$token = auth()->attempt($validator->validated())) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
 
-        return response()->json([
-            'message' => 'User successfully registered',
-            'user' => $user
-        ], 201);
+        $token = $request->user()->createToken('auth_token')->plainTextToken;
+
+        $sql = User::where('email', $request->email)->first(['id', 'active']);
+
+        if (!empty($sql) && $sql->active != User::USER_STATUS_ACTIVE) {
+            return response()->json(['error' => 'account not active'], 403);
+        }
+
+        return $this->createToken($token);
     }
 
 
@@ -59,6 +64,16 @@ class AuthController extends Controller
 
         return response()->json(['message' => 'User successfully signed out']);
     }
+
+    /**
+     * Refresh a token.
+     *
+     *  @return \Illuminate\Http\JsonResponse
+     */
+    // public function refresh()
+    // {
+    //     return $this->createNewToken(auth()->refresh());
+    // }
 
 
     /**
@@ -90,23 +105,13 @@ class AuthController extends Controller
         ], 201);
     }
 
-
-    private function respondWithToken($user)
-    {
-        $token = $user->createToken('MyAppToken'); // Customize token name if desired
-        return response()->json([
-            'access_token' => $token->plainTextToken,
-            'token_type' => 'Bearer',
-        ]);
-    }
-
-    protected function createNewToken($token)
+    protected function createToken($token)
     {
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            // 'expires_in' => auth()->factory()->getTTL() * 60,
-            'user' => auth()->user()
+            'expires_in' => JWTAuth::factory()->getTTL() * 60,
+            'user' => JWTAuth::user()
         ]);
     }
 
@@ -138,4 +143,46 @@ class AuthController extends Controller
         ], 201);
     }
 
+
+    /**
+     * Create token password reset.
+     *
+     * @param  ResetPasswordRequest $request
+     * @return JsonResponse
+     */
+    // public function sendMail(Request $request)
+    // {
+    //     $user = User::where('email', $request->email)->firstOrFail();
+    //     $passwordReset = PasswordReset::updateOrCreate([
+    //         'email' => $user->email,
+    //     ], [
+    //         'token' => Str::random(60)
+    //     ]);
+    //     if ($passwordReset) {
+    //         $user->notify(new ResetPasswordRequest($passwordReset->token));
+    //     }
+
+    //     return response()->json([
+    //         'message' => 'We have e-mailed your password reset link!'
+    //     ]);
+    // }
+
+    // public function reset(Request $request, $token)
+    // {
+    //     $passwordReset = PasswordReset::where('token', $token)->firstOrFail();
+    //     if (Carbon::parse($passwordReset->updated_at)->addMinutes(720)->isPast()) {
+    //         $passwordReset->delete();
+
+    //         return response()->json([
+    //             'message' => 'This password reset token is invalid.',
+    //         ], 422);
+    //     }
+    //     $user = User::where('email', $passwordReset->email)->firstOrFail();
+    //     $updatePasswordUser = $user->update($request->only('password'));
+    //     $passwordReset->delete();
+
+    //     return response()->json([
+    //         'success' => $updatePasswordUser,
+    //     ]);
+    // }
 }

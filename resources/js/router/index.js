@@ -5,12 +5,14 @@ const Home = () => import('@/Pages/Home')
 const NotFound = () => import('@/Components/NotfoundPage')
 const Register = () => import('@/Pages/RegisterPage')
 const Login = () => import('@/Pages/LoginPage')
+const ForgetPasssword = () => import('@/Pages/ForgetPassword')
 
 
 const routes = [
-    { path: '/', component: Home },
-    { path: '/login', component: Login },
-    { path: '/register', component: Register },
+    { path: '/admin', name: "Home", component: Home, meta: { requiresAuth: true } },
+    { path: '/admin/login', name: 'adminLogin', component: Login, },
+    { path: '/admin/register', component: Register },
+    { path: '/admin/forget-password', component: ForgetPasssword },
     { path: '/:pathMatch(.*)*', component: NotFound }
 ]
 
@@ -23,5 +25,18 @@ const router = createRouter({
     routes,
 })
 
+const authMiddleware = (to, from, next) => {
+    const isAuthenticated = !to?.meta?.requiresAuth
 
-export default router
+    isAuthenticated ? next() : next({ name: 'adminLogin' });
+}
+
+router.beforeEach((to, from, next) => {
+    if (to.matched.some(record => record.meta.requiresAuth)) {
+        authMiddleware(to, from, next);
+    } else {
+        next();
+    }
+});
+
+export default router;

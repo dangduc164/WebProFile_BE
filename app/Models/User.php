@@ -7,10 +7,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject
 {
     use HasApiTokens, HasFactory, Notifiable;
+
+
+    public const USER_STATUS_ACTIVE = 0;
+    public const USER_STATUS_DEACTIVE = 1;
 
     /**
      * The attributes that are mass assignable.
@@ -19,7 +24,6 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'active',
-        'avatar',
         'full_name',
         'birthday_inder',
         'day',
@@ -31,6 +35,7 @@ class User extends Authenticatable
         'email',
         'email_verified_at',
         'password',
+        'phone_number',
         'work_experience',
     ];
 
@@ -55,4 +60,25 @@ class User extends Authenticatable
         'created_at'  => 'date:d-m-Y H:i:s',
         'updated_at' => 'date:d-m-Y H:i:s',
     ];
+
+
+    /**
+     * Get the identifier that will be stored in the subject claim of the JWT.
+     *
+     * @return mixed
+     */
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    /**
+     * Return a key value array, containing any custom claims to be added to the JWT.
+     *
+     * @return array
+     */
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
 }

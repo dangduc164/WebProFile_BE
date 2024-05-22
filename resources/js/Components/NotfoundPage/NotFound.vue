@@ -67,7 +67,15 @@
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+import { onMounted } from 'vue';
+onMounted(() => {
+    setTimeout(() => {
+        window.location.href = "/";
+
+    }, 5000);
+});
+</script>
 
 <style scoped lang="scss">
 @import "./style.scss";

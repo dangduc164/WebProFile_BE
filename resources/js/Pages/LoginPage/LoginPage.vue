@@ -127,13 +127,10 @@ const handleLogin = async () => {
     if (getToken(TYPE_USER.USER)) removeToken(TYPE_USER.USER);
     setToken(access_token, expires_in, TYPE_USER.ADMIN);
     toast.success("Login success");
-    console.log("store111111111", store);
   } catch (error) {
     toast.error(error.message);
   } finally {
-    setTimeout(() => {
-      store.state[MODULE_STORE.COMMON.NAME].isLoadingPage = true;
-    }, 3000);
+    store.state[MODULE_STORE.COMMON.NAME].isLoadingPage = false;
   }
 };
 </script>

@@ -8,23 +8,22 @@ const Login = () => import('@/Pages/LoginPage')
 const ForgetPasssword = () => import('@/Pages/ForgetPassword')
 
 
-
 export default [
     {
         path: ROUTER_PATH.ADMIN,
         name: "Home",
         component: Home,
-        meta: {
-            middleware: [(context) => guest(context, TYPE_USER.ADMIN)],
-        },
+        // meta: {
+        //     middleware: [(context) => auth(context, TYPE_USER.ADMIN)],
+        // },
     },
     {
         path: ROUTER_PATH.LOGIN,
         name: 'adminLogin',
         component: Login,
-        meta: {
-            middleware: [(context) => guest(context, TYPE_USER.ADMIN)],
-        },
+        // meta: {
+        //     middleware: [(context) => guest(context, TYPE_USER.ADMIN)],
+        // },
     },
     { path: '/admin/register', component: Register },
     { path: '/admin/forget-password', component: ForgetPasssword },

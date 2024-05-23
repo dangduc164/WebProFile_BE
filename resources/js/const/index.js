@@ -1,15 +1,15 @@
 export const ROUTER_PATH = {
-    ADMIN: '/admin',
-    LOGIN: '/admin/login',
-    REGISTER: '/admin/register',
-}
+    ADMIN: "/admin",
+    LOGIN: "/admin/login",
+    REGISTER: "/admin/register",
+};
 
 export const ROUTE_NAME = {
     ADMIN: {
-        LOGIN: 'AdminLogin',
-        EDIT_PROFILE: 'AdminEditProfile',
-    }
-}
+        LOGIN: "AdminLogin",
+        EDIT_PROFILE: "AdminEditProfile",
+    },
+};
 
 export const TYPE_USER = {
     USER: "user",
@@ -25,11 +25,12 @@ export const STATUS_CODE = {
     InternalServerError: 500,
 };
 
-
 export const MODULE_STORE = {
     AUTH: {
         NAME: "AUTH",
-        GETTERS: {},
+        GETTERS: {
+            ISAUTH: "ISAUTH",
+        },
         ACTIONS: {},
         MUTATIONS: {},
     },
@@ -42,4 +43,4 @@ export const MODULE_STORE = {
         ACTIONS: {},
         MUTATIONS: {},
     },
-}
+};

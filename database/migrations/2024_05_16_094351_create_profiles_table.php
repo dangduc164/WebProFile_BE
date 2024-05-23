@@ -11,25 +11,25 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::dropIfExists('profiles_content');
-        Schema::create('profiles_content', function (Blueprint $table) {
+        Schema::dropIfExists('profiles_contents');
+        Schema::create('profiles_contents', function (Blueprint $table) {
             $table->id();
             $table->string('user_id');
-            $table->string('icon', 255);
-            $table->string('title', 255);
-            $table->string('description');
-            $table->string('order_number');
+            $table->string('icon', 255)->nullable();
+            $table->string('title', 255)->nullable();
+            $table->string('description', 500)->nullable();
+            $table->integer('order_number');
             $table->timestamps();
         });
 
-        Schema::dropIfExists('profiles_social');
-        Schema::create('profiles_social', function (Blueprint $table) {
+        Schema::dropIfExists('profiles_socials');
+        Schema::create('profiles_socials', function (Blueprint $table) {
             $table->id();
             $table->string('user_id');
-            $table->string('icon', 255);
-            $table->string('title', 255);
-            $table->string('link_url');
-            $table->string('order_number');
+            $table->string('icon', 255)->nullable();
+            $table->string('title', 255)->nullable();
+            $table->string('link_url')->nullable();
+            $table->integer('order_number');
             $table->timestamps();
         });
 
@@ -37,7 +37,7 @@ return new class extends Migration
         Schema::create('profiles_avatars', function (Blueprint $table) {
             $table->id();
             $table->string('user_id');
-            $table->string('avatar_url');
+            $table->string('avatar_url')->nullable();
             $table->timestamps();
         });
     }
@@ -47,8 +47,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('profiles_content');
-        Schema::dropIfExists('profiles_social');
+        Schema::dropIfExists('profiles_contents');
+        Schema::dropIfExists('profiles_socials');
         Schema::dropIfExists('profiles_avatars');
     }
 };

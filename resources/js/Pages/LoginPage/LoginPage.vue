@@ -105,13 +105,14 @@ import { Field, Form } from "vee-validate";
 import Loading from "@/Components/Loading";
 import { setToken, removeToken, getToken } from "@/utils/authToken";
 import { TYPE_USER, ROUTER_PATH, MODULE_STORE } from "@/const";
-
-import { login } from "@/api";
-import router from "../../router";
 import { useStore } from "vuex";
+import { useRouter } from "vue-router";
+
+import { loginApi } from "@/api";
 
 const toast = inject("$toast");
 const store = useStore();
+const router = useRouter();
 
 const isLoading = ref(false);
 const userLogin = ref({
@@ -122,11 +123,15 @@ const userLogin = ref({
 const handleLogin = async () => {
   try {
     store.state[MODULE_STORE.COMMON.NAME].isLoadingPage = true;
-    const res = await login(userLogin.value);
-    const { access_token, expires_in } = res;
-    if (getToken(TYPE_USER.USER)) removeToken(TYPE_USER.USER);
-    setToken(access_token, expires_in, TYPE_USER.ADMIN);
-    toast.success("Login success");
+    const res = await loginApi(userLogin.value);
+    if (res) {
+      const { access_token, expires_in } = res;
+      if (getToken(TYPE_USER.USER)) removeToken(TYPE_USER.USER);
+      setToken(access_token, expires_in, TYPE_USER.ADMIN);
+      store.state[MODULE_STORE.AUTH.NAME].isAuthenticated = true;
+      router.push({ path: ROUTER_PATH.ADMIN, query: { user_id: res?.user?.id } });
+      toast.success("Login success");
+    }
   } catch (error) {
     toast.error(error.message);
   } finally {

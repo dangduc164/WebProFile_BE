@@ -38,9 +38,8 @@ axiosInstance.interceptors.response.use(
         const errorData = get(error, "response.data");
         switch (status) {
             case STATUS_CODE.Unauthorized: {
-                const { t } = i18n.global;
                 removeToken();
-                return Promise.reject({ message: t("common.unauthorized"), status });
+                return Promise.reject({ message: "unauthorized", status });
             }
             default:
                 return Promise.reject({ ...errorData, status });

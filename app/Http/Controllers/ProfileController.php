@@ -3,8 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\ProfilesAvatar;
+use App\Models\ProfilesContent;
+use App\Models\ProfilesSocial;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
@@ -12,7 +18,6 @@ class ProfileController extends Controller
     public function uploadAvatar(Request $request): JsonResponse
     {
 
-        // dd($request->toArray());
         if (!$request->hasFile('file')) {
             return response()->json([
                 'status' => 400,
@@ -32,24 +37,41 @@ class ProfileController extends Controller
         $file = $request->file('file');
         $extension = strtolower($file->getClientOriginalExtension());
         $checkExtension = in_array($extension, $allowedFileExtension);
+        $path = $file->store('public/images/avatar');
 
         if (!$checkExtension) {
             return response()->json(['invalid_file_format'], 422);
         }
 
+        // Get existing profile avatar (if any)
+        $existingAvatar = ProfilesAvatar::where('user_id', $request->user_id)->first();
+        $avatar_url_old = $existingAvatar->avatar_url;
+
+        // Delete old file if it exists
+        if (file_exists($avatar_url_old)) {
+            unlink($avatar_url_old);
+        }
+
         $informationImage = getimagesize($file);
-        $path = $file->store('public/images/avatar');
-        $profileAvatar = new ProfilesAvatar();
-        $profileAvatar->avatar_url = $path;
-        $profileAvatar->save();
 
+        // Save profile avatar information
+        $profileAvatar = ProfilesAvatar::updateOrCreate(
+            ['user_id' => $request->user_id],
+            ['avatar_url' => $path]
+        );
 
-        return response()->json([
+        $response = [
+            'status' => 200,
+            'message' => 'Upload success',
+            'information' => $informationImage,
+            'user_id' => $request->user_id,
             'path_file' => $path,
             'type' => $type,
-            'length' => filesize($file), //byte
-            'extension' => $extension
-        ]);
+            'length' => filesize($file),
+            'extension' => $extension,
+        ];
+
+        return response()->json($response);
     }
 
 
@@ -99,4 +121,72 @@ class ProfileController extends Controller
     //     return response()->json($response, 200);
 
     // }
+
+
+    /**
+     * @param  int  $id
+     * @return JsonResponse
+     */
+    public function getInfo($id): JsonResponse
+    {
+
+        $user = User::find($id);
+
+        if (!$user) {
+            $response = [
+                'data' => null,
+                'message' => 'Not found user'
+            ];
+            return response()->json($response, 404);
+        }
+        $data = DB::table('users')
+            ->leftJoin('profiles_content', 'profiles_content.user_id', $user->id)
+            ->leftJoin('profiles_avatars', 'profiles_avatars.user_id', $user->id)
+            ->leftJoin('profiles_social', 'profiles_social.user_id', $user->id)
+            ->where('users.id', $user->id)
+            ->get()
+            ->toArray();
+        $response = [
+            'data' =>  $data
+        ];
+        return response()->json($response, 200);
+    }
+
+
+    public function createOrUpdate(Request $request, $id)
+    {
+        // $validatedData = $request->validate([
+        //     'content' => 'nullable|array',
+        //     'content.*.title' => 'nullable|string',
+        //     'content.*.description' => 'nullable|string',
+        //     'content.*.icon' => 'nullable|string',
+        //     'content.*.order_number' => 'required|integer',
+        // ]);
+        $newLinkSocial = [];
+        foreach ($request['list_link_social'] as $item) {
+            $newItem = ProfilesSocial::insert([
+                'user_id' => $id,
+                'label' => $item['label'] ?? null,
+                'icon' => $item['icon'] ?? null,
+                'link_url' => $item['link_url'] ?? null,
+            ]);
+            $newLinkSocial[] = $newItem;
+        }
+
+        ProfilesContent::where('user_id', $id)->delete();
+
+        $newContent = [];
+        foreach ($request['content'] as $item) {
+            $newItem = ProfilesContent::insert([
+                'user_id' => $id,
+                'title' => $item['title'] ?? null,
+                'description' => $item['description'] ?? null,
+                'icon' => $item['icon'] ?? null,
+                'order_number' => $item['order_number'],
+            ]);
+            $newContent[] = $newItem;
+        }
+
+        return response()->json($newContent, 200);
+    }
 }

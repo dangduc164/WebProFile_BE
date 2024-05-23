@@ -17,4 +17,9 @@ class ProfilesContent extends Model
         'description',
         'order_number',
     ];
+
+    protected $casts = [
+        'created_at'  => 'date:d-m-Y H:i:s',
+        'updated_at' => 'date:d-m-Y H:i:s',
+    ];
 }

@@ -30,4 +30,6 @@ Route::group(['prefix' => 'auth'], function () {
 
 Route::group(['prefix' => 'admin'], function () {
     Route::post('/upload-avatar', [ProfileController::class, 'uploadAvatar'])->name('upload-avatar');
+    Route::get('/{id}/info-user', [ProfileController::class, 'getInfo'])->name('info-user');
+    Route::put('/{id}/createOrUpdate', [ProfileController::class, 'createOrUpdate'])->name('createOrUpdate');
 });

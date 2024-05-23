@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('year');
             $table->string('birthday_inder', 255);
             $table->string('address', 500);
-            $table->string('gender', 50);
+            $table->string('gender', 50)->comment('0: male, 1: female, 3: other');;
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');

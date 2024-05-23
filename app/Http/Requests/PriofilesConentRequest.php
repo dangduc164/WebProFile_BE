@@ -24,11 +24,28 @@ class PriofilesConentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            // 'status' => 'required|regex:/^[0-1]+$/',
-            'user_id' => 'required',
-            'icon' => 'nullable|string|max:255',
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
+            'infor.*.address' => 'required|string',
+            'infor.*.birthday_inder' => 'required|string',
+            'infor.*.day' => 'required|string',
+            'infor.*.email' => 'required|string',
+            'infor.*.full_name' => 'required|string',
+            'infor.*.month' => 'required|string',
+            'infor.*.gender' => 'required|string',
+            'infor.*.phone_number' => 'required|string',
+            'infor.*.year' => 'required|string',
+            'infor.*.avatar_url' => 'required|string',
+            'infor.*.work_experience' => 'required|string',
+
+            'content' => 'nullable|array',
+            'content.*.title' => 'nullable|string',
+            'content.*.description' => 'nullable|string',
+            'content.*.icon' => 'nullable|string',
+            'content.*.order_number' => 'required|integer',
+
+            'list_link_social' => 'nullable|array',
+            'list_link_social.*.icon' => 'nullable|string',
+            'list_link_social.*.label' => 'nullable|string',
+            'list_link_social.*.link' => 'nullable|string',
         ];
     }
 

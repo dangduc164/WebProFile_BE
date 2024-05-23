@@ -60,7 +60,16 @@ class AuthController extends Controller
      */
     public function logout()
     {
-        auth()->logout();
+        // auth()->logout();
+
+        // return response()->json(['message' => 'User successfully signed out']);
+
+        dd(auth());
+        try {
+            auth()->logout();
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Logout failed: ' . $e->getMessage()], 500);
+        }
 
         return response()->json(['message' => 'User successfully signed out']);
     }
@@ -96,7 +105,7 @@ class AuthController extends Controller
         $user = User::create(array_merge(
             $validator->validated(),
             ['password' => bcrypt($request->password)],
-            ['active' => 1]
+            ['active' => 0]
         ));
 
         return response()->json([

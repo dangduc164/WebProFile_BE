@@ -1,11 +1,19 @@
 <template>
   <div class="c-nav p-3 bg-white">
     <div class="flex items-center justify-end">
-      <div class="avatar flex items-center gap-2 cursor-pointer" @click="handleShowNavItem">
+      <div
+        class="avatar flex items-center gap-2 cursor-pointer"
+        @click="handleShowNavItem"
+      >
         <img class="rounded-full w-8 h-8" src="https://i.pravatar.cc/300" alt="" />
         <i class="fa-solid fa-caret-down"></i>
       </div>
       <div class="c-nav_item" v-if="isShowNavItem">
+        <ul>
+          <li>
+            <router-link to="/my-page">My page</router-link>
+          </li>
+        </ul>
         <button class="c-btn c-btn-logout" @click="handleLogout">Logout</button>
       </div>
     </div>
@@ -47,5 +55,5 @@ const handleLogout = async () => {
 </script>
 
 <style lang="scss" scoped>
-@import './Navigation.scss';
+@import "./Navigation.scss";
 </style>

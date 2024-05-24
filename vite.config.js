@@ -5,11 +5,6 @@ import Components from "unplugin-vue-components/vite";
 import { AntDesignVueResolver } from "unplugin-vue-components/resolvers";
 
 export default defineConfig({
-    build: {
-        rollupOptions: {
-            // https://rollupjs.org/guide/en/#big-list-of-options
-        },
-    },
     plugins: [
         laravel({
             input: ["resources/css/app.css", "resources/js/app.js"],

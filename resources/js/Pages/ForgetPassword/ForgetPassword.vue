@@ -1,5 +1,4 @@
 <template>
-  <Loading v-if="isLoading" />
   <div class="py-16">
     <div
       class="flex bg-white rounded-lg shadow-lg overflow-hidden mx-auto max-w-sm lg:max-w-4xl"
@@ -61,9 +60,7 @@
 <script setup>
 import { ref, inject } from "vue";
 import { Field, Form } from "vee-validate";
-import Loading from "@/Components/Loading";
 
-import { login } from "@/api";
 
 const toast = inject("$toast");
 
@@ -77,7 +74,6 @@ const handleLogin = async () => {
     isLoading.value = true;
     console.log("🚀 ~ file: LoginPage.vue:handleLogin ~ userLogin:", userLogin.value);
 
-    await login(userLogin.value);
   } catch (error) {
     console.log(error);
     toast.error(error.message);

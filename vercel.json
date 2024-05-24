@@ -11,11 +11,19 @@
             "dest": "/api/index.php"
         }
     ],
+    "builds": [
+        {
+            "src": "path/to/your/project/package.json",
+            "use": "@vercel/node"
+        }
+    ],
+    "installCommand": "npm install",
+    "buildCommand": "npm run build",
     "outputDirectory": "public/build",
     "env": {
-        "APP_NAME": "Vercel Laravel",
+        "APP_NAME": "WebProfile",
         "APP_ENV": "production",
-        "APP_KEY":"base64:CmdwjUo++yDpyhSlx78ZXQi3wEzdYNC3R8jAV0sbNqk=",
+        "APP_KEY": "base64:2rF1W6NLZwGOgSmJB2hVuvH9W1XVJGGH5RuoSm1l/js=",
         "APP_DEBUG": "false",
         "APP_URL": "https://laravel-vercel-sooty.vercel.app",
         "VERCEL_DEMO_MODE": "true",

@@ -1382,7 +1382,7 @@ vue-types@^3.0.0:
   dependencies:
     is-plain-object "3.0.1"
 
-vue@^3.0, vue@^3.0.0, vue@^3.0.1, vue@^3.2.0, vue@^3.2.25, vue@^3.4.26, vue@>=3.0.3, vue@>=3.2.0, "vue@2 || 3", vue@3.4.27:
+vue@^3.0, vue@^3.0.0, vue@^3.0.1, vue@^3.2.0, vue@^3.2.25, vue@^3.4.26, vue@^3.4.27, vue@>=3.0.3, vue@>=3.2.0, "vue@2 || 3", vue@3.4.27:
   version "3.4.27"
   resolved "https://registry.npmjs.org/vue/-/vue-3.4.27.tgz"
   integrity sha512-8s/56uK6r01r1icG/aEOHqyMVxd1bkYcSe9j8HcKtr/xTOFWvnzIVTehNW+5Yt89f+DLBe4A569pnZLS5HzAMA==

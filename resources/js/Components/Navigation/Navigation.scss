@@ -1,0 +1,8 @@
+.c-nav {
+    position: relative;
+    &_item {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+    }
+}

@@ -1,13 +1,18 @@
-import { defineConfig } from 'vite';
-import laravel from 'laravel-vite-plugin';
-import vue from '@vitejs/plugin-Vue';
-import Components from 'unplugin-vue-components/vite';
-import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers';
+import { defineConfig } from "vite";
+import laravel from "laravel-vite-plugin";
+import vue from "@vitejs/plugin-Vue";
+import Components from "unplugin-vue-components/vite";
+import { AntDesignVueResolver } from "unplugin-vue-components/resolvers";
 
 export default defineConfig({
+    build: {
+        rollupOptions: {
+            // https://rollupjs.org/guide/en/#big-list-of-options
+        },
+    },
     plugins: [
         laravel({
-            input: ['resources/css/app.css', 'resources/js/app.js'],
+            input: ["resources/css/app.css", "resources/js/app.js"],
             refresh: true,
         }),
         vue({
@@ -20,17 +25,17 @@ export default defineConfig({
         }),
         Components({
             resolvers: [
-              AntDesignVueResolver({
-                importStyle: false, // css in js
-              }),
+                AntDesignVueResolver({
+                    importStyle: false, // css in js
+                }),
             ],
-          }),
+        }),
     ],
     resolve: {
         alias: {
-            'vue': 'vue/dist/vue.esm-bundler.js',
-            '@/assets/*': './resources/assets/*',
-            '@/*': './resources/js/*',
+            vue: "vue/dist/vue.esm-bundler.js",
+            "@/assets/*": "./resources/assets/*",
+            "@/*": "./resources/js/*",
         },
     },
 });

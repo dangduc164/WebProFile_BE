@@ -2,15 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProfilesConentRequest;
 use App\Models\ProfilesAvatar;
 use App\Models\ProfilesContent;
 use App\Models\ProfilesSocial;
 use App\Models\User;
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+
+use function Psy\debug;
 
 class ProfileController extends Controller
 {
@@ -45,12 +49,15 @@ class ProfileController extends Controller
 
         // Get existing profile avatar (if any)
         $existingAvatar = ProfilesAvatar::where('user_id', $request->user_id)->first();
-        $avatar_url_old = $existingAvatar->avatar_url;
+        if ($existingAvatar) {
+            $avatar_url_old = $existingAvatar->avatar_url ?? '';
 
-        // Delete old file if it exists
-        if (file_exists($avatar_url_old)) {
-            unlink($avatar_url_old);
+            // Delete old file if it exists
+            if (file_exists($avatar_url_old)) {
+                unlink($avatar_url_old);
+            }
         }
+
 
         $informationImage = getimagesize($file);
 
@@ -130,45 +137,73 @@ class ProfileController extends Controller
     public function getInfo($id): JsonResponse
     {
 
-        $user = User::find($id);
+        try {
+            if ($id) {
+                $dataUser = User::find($id)->get()->toArray();
+                if (empty($dataUser)) {
+                    $response = [
+                        'user' => null,
+                        'message' => 'Not found user'
+                    ];
+                    return response()->json($response, 404);
+                }
+                $dataInfor = User::select(
+                    'users.*',
+                    'profiles_avatars.avatar_url',
+                    // 'profiles_contents.*'
+                )
+                    ->leftJoin('profiles_avatars', 'users.id', '=', 'profiles_avatars.user_id')
+                    // ->leftJoin('profiles_contents', 'users.id', '=', 'profiles_contents.user_id')
+                    ->where('users.id', $id)
+                    ->get()
+                    ->toArray();
+                $dataContent = ProfilesContent::where('user_id', $id)->orderBy('order_number', 'asc')->get()->toArray();
+                $dataSocial = ProfilesSocial::where('user_id', $id)->orderBy('order_number', 'asc')->get()->toArray();
 
-        if (!$user) {
-            $response = [
-                'data' => null,
-                'message' => 'Not found user'
-            ];
-            return response()->json($response, 404);
+                $response = [
+                    'infor' => $dataInfor[0],
+                    'content' => $dataContent,
+                    'list_link_social' => $dataSocial,
+                ];
+                return response()->json($response, 200);
+            }
+        } catch (Exception $e) {
+            // Handle database errors here (e.g., log the error, return a generic error response)
+
         }
-        $data = DB::table('users')
-            ->leftJoin('profiles_content', 'profiles_content.user_id', $user->id)
-            ->leftJoin('profiles_avatars', 'profiles_avatars.user_id', $user->id)
-            ->leftJoin('profiles_social', 'profiles_social.user_id', $user->id)
-            ->where('users.id', $user->id)
-            ->get()
-            ->toArray();
-        $response = [
-            'data' =>  $data
-        ];
-        return response()->json($response, 200);
     }
 
 
     public function createOrUpdate(Request $request, $id)
     {
-        // $validatedData = $request->validate([
-        //     'content' => 'nullable|array',
-        //     'content.*.title' => 'nullable|string',
-        //     'content.*.description' => 'nullable|string',
-        //     'content.*.icon' => 'nullable|string',
-        //     'content.*.order_number' => 'required|integer',
-        // ]);
+        $infor = $request->infor;
+        $newInfor = User::updateOrCreate(
+            [
+                'id'   => $id,
+            ],
+            [
+                'active' => $infor['active'],
+                'full_name' => $infor['full_name'],
+                'work_experience' => $infor['work_experience'],
+                'phone_number' => $infor['phone_number'],
+                'day' => $infor['day'],
+                'month' => $infor['month'],
+                'year' => $infor['year'],
+                'birthday_inder' => $infor['birthday_inder'],
+                'address' => $infor['address'],
+                'gender' => $infor['gender'],
+            ]
+        );
+
+        ProfilesSocial::where('user_id', $id)->delete();
         $newLinkSocial = [];
         foreach ($request['list_link_social'] as $item) {
             $newItem = ProfilesSocial::insert([
                 'user_id' => $id,
-                'label' => $item['label'] ?? null,
+                'title' => $item['title'] ?? null,
                 'icon' => $item['icon'] ?? null,
                 'link_url' => $item['link_url'] ?? null,
+                'order_number' => $item['order_number'] ?? null,
             ]);
             $newLinkSocial[] = $newItem;
         }
@@ -187,6 +222,12 @@ class ProfileController extends Controller
             $newContent[] = $newItem;
         }
 
-        return response()->json($newContent, 200);
+        $response = [
+            'info' => $newInfor,
+            'link_social' => $newLinkSocial,
+            'content' => $newContent
+        ];
+
+        return response()->json($response, 200);
     }
 }

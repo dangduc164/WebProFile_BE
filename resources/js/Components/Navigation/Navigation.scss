@@ -1,8 +1,13 @@
 .c-nav {
     position: relative;
     &_item {
+        padding: 0.5rem;
         position: absolute;
+        background: #fff;
+        min-width: 250px;
         right: 0;
-        bottom: 0;
+        bottom: -65px;
+        z-index: 20;
+        box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
     }
 }

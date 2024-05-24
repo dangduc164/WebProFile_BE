@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
                 'type' => 'admin',
                 'address' => 'Ha Noi',
                 'work_experience' => '2',
+                'position_application' => 'Fulltask develop',
                 'phone_number' => '0987654321',
                 'day' => '16',
                 'month' => '04',

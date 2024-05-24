@@ -26,7 +26,7 @@ return new class extends Migration
         Schema::create('profiles_socials', function (Blueprint $table) {
             $table->id();
             $table->string('user_id');
-            $table->string('icon', 255)->nullable();
+            $table->string('icon', 500)->nullable();
             $table->string('title', 255)->nullable();
             $table->string('link_url')->nullable();
             $table->integer('order_number');

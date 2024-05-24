@@ -16,6 +16,7 @@ return new class extends Migration
             $table->tinyInteger('active')->default(0)->comment('0: Active, 1: Inactive');
             $table->string('full_name', 255);
             $table->string('work_experience', 255);
+            $table->string('position_application', 255);
             $table->string('phone_number', 255);
             $table->string('day');
             $table->string('month');

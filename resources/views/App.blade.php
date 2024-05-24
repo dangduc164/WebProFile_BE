@@ -35,7 +35,7 @@
         integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
         crossorigin="anonymous" referrerpolicy="no-referrer">
     <!-- Styles -->
-    @vite(['resources/assets/styles/app.css'])
+    @vite(['resources/css/app.css'])
 </head>
 
 <body>

@@ -158,12 +158,23 @@ class ProfileController extends Controller
                     ->get()
                     ->toArray();
                 $dataContent = ProfilesContent::where('user_id', $id)->orderBy('order_number', 'asc')->get()->toArray();
-                $dataSocial = ProfilesSocial::where('user_id', $id)->orderBy('order_number', 'asc')->get()->toArray();
+
+                $dataSocial = ProfilesSocial::select(
+                    'profiles_socials.facebook_url',
+                    'profiles_socials.zalo_url',
+                    'profiles_socials.github_url',
+                    'profiles_socials.instagram_url',
+                    'profiles_socials.twitter_url',
+                )
+                    ->where('profiles_socials.user_id', $id)
+                    ->get()
+                    ->toArray();
+
 
                 $response = [
                     'infor' => $dataInfor[0],
                     'content' => $dataContent,
-                    'list_link_social' => $dataSocial,
+                    'link_social' => $dataSocial[0],
                 ];
                 return response()->json($response, 200);
             }
@@ -196,17 +207,19 @@ class ProfileController extends Controller
         );
 
         ProfilesSocial::where('user_id', $id)->delete();
-        $newLinkSocial = [];
-        foreach ($request['list_link_social'] as $item) {
-            $newItem = ProfilesSocial::insert([
+        $linkSocial =  $request->link_social;
+        $newLinkSocial = ProfilesSocial::updateOrCreate(
+            [
                 'user_id' => $id,
-                'title' => $item['title'] ?? null,
-                'icon' => $item['icon'] ?? null,
-                'link_url' => $item['link_url'] ?? null,
-                'order_number' => $item['order_number'] ?? null,
-            ]);
-            $newLinkSocial[] = $newItem;
-        }
+            ],
+            [
+                'facebook_url' => $linkSocial['facebook_url'] ?? null,
+                'twitter_url' => $linkSocial['twitter_url'] ?? null,
+                'github_url' => $linkSocial['github_url'] ?? null,
+                'zalo_url' => $linkSocial['zalo_url'] ?? null,
+                'instagram_url' => $linkSocial['instagram_url'] ?? null,
+            ]
+        );
 
         ProfilesContent::where('user_id', $id)->delete();
 

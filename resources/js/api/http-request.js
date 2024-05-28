@@ -10,7 +10,8 @@ const headers = {
 };
 
 const axiosInstance = axios.create({
-    baseURL: 'https://web-pro-file-be.vercel.app/api',
+    baseURL: 'http://localhost:8000/api',
+    // baseURL: process.env.MIX_API_URL,
     headers,
 });
 

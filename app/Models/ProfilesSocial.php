@@ -11,10 +11,11 @@ class ProfilesSocial extends Model
 
     protected $fillable = [
         'user_id',
-        'icon',
-        'link_url',
-        'title',
-        'order_number',
+        'facebook_url',
+        'twitter_url',
+        'github_url',
+        'zalo_url',
+        'instagram_url',
     ];
 
 

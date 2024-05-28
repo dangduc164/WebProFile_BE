@@ -26,10 +26,11 @@ return new class extends Migration
         Schema::create('profiles_socials', function (Blueprint $table) {
             $table->id();
             $table->string('user_id');
-            $table->string('icon', 500)->nullable();
-            $table->string('title', 255)->nullable();
-            $table->string('link_url')->nullable();
-            $table->integer('order_number');
+            $table->string('facebook_url',255)->nullable();
+            $table->string('zalo_url',255)->nullable();
+            $table->string('github_url',255)->nullable();
+            $table->string('instagram_url',255)->nullable();
+            $table->string('twitter_url',255)->nullable();
             $table->timestamps();
         });
 

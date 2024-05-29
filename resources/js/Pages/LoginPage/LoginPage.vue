@@ -1,5 +1,4 @@
 <template>
-  <Loading v-if="isLoading" />
   <div class="py-16">
     <div
       class="flex bg-white rounded-lg shadow-lg overflow-hidden mx-auto max-w-sm lg:max-w-4xl"
@@ -114,7 +113,6 @@ const toast = inject("$toast");
 const store = useStore();
 const router = useRouter();
 
-const isLoading = ref(false);
 const userLogin = ref({
   email: "",
   password: "",

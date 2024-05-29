@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ExportPdfController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -33,3 +34,6 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('/{id}/info-user', [ProfileController::class, 'getInfo'])->name('info-user');
     Route::put('/{id}/createOrUpdate', [ProfileController::class, 'createOrUpdate'])->name('createOrUpdate');
 });
+
+
+Route::get('/generate-pdf', [ExportPdfController::class, 'generatePdf'])->name('generate-pdf');

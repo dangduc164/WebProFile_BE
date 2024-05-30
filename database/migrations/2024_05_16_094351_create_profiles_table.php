@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('user_id');
             $table->string('icon', 255)->nullable();
             $table->string('title', 255)->nullable();
-            $table->string('description', 500)->nullable();
+            $table->text('description')->nullable();
             $table->integer('order_number');
             $table->timestamps();
         });

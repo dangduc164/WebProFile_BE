@@ -288,12 +288,12 @@
                 >
                   <h3 class="md:text-2xl text-[18px] text-teal-500 text-semibold">
                     <i class="fa-solid fa-id-card mr-2"></i>
-                    Information
+                    Thông tin
                   </h3>
                 </div>
                 <div class="flex flex-wrap items-center min-h-8 py-2">
                   <div class="w-1/4 px-2 md:px-4">
-                    <h6 class="mb-0">Full Name</h6>
+                    <h6 class="mb-0">Họ và tên</h6>
                   </div>
 
                   <div class="w-3/4 text-gray-600">
@@ -308,7 +308,7 @@
                 <hr />
                 <div class="flex flex-wrap items-center min-h-8">
                   <div class="w-1/4 px-2 md:px-4">
-                    <h6 class="mb-0">BirthDay</h6>
+                    <h6 class="mb-0">Ngày sinh</h6>
                   </div>
                   <div class="w-3/4 text-gray-600 flex items-center gap-2">
                     <Field
@@ -375,7 +375,7 @@
                 <hr />
                 <div class="flex flex-wrap items-center min-h-8">
                   <div class="w-1/4 px-2 md:px-4">
-                    <h6 class="mb-0">Gender</h6>
+                    <h6 class="mb-0">Giới tính</h6>
                   </div>
                   <div class="w-3/4 text-gray-600">
                     <Field
@@ -386,7 +386,7 @@
                       name="gender"
                       :class="{ no_value: dataProfile.infor.gender == '' }"
                     >
-                      <option value="" hidden disabled selected>Male</option>
+                      <option value="" hidden disabled selected>Nam</option>
                       <option
                         v-for="(item, index) in listGenders"
                         :key="index"
@@ -416,7 +416,7 @@
                 <hr />
                 <div class="flex flex-wrap items-center min-h-8">
                   <div class="w-1/4 px-2 md:px-4">
-                    <h6 class="mb-0">Phone</h6>
+                    <h6 class="mb-0">Số điện thoại</h6>
                   </div>
                   <div class="w-3/4 text-gray-600">
                     <Field
@@ -430,7 +430,7 @@
                 <hr />
                 <div class="flex flex-wrap items-center min-h-8">
                   <div class="w-1/4 px-2 md:px-4">
-                    <h6 class="mb-0">Address</h6>
+                    <h6 class="mb-0">Địa chỉ</h6>
                   </div>
                   <div class="w-3/4 text-gray-600 mt-2">
                     <Field
@@ -484,6 +484,7 @@
                           handleResizeTextarea(`desc-${index}`, item.desc)
                         "
                       />
+                      <Vue2Editor v-model="item.description" />
                     </div>
                     <div>
                       <button
@@ -529,6 +530,8 @@ import moment from "moment/moment";
 import { useStore } from "vuex";
 import { MODULE_STORE } from "@/const";
 import { useRoute } from "vue-router";
+// import TextEditor from "@/Components/TextEditor";
+import Vue2Editor from "vue2-editor";
 
 import { uploadAvatarApi, createOrUpdateApi, getInforApi } from "@/api";
 
@@ -538,24 +541,26 @@ const route = useRoute();
 const toast = inject("$toast");
 const typeImage = ref("");
 const dateFormatList = ["DD/MM/YYYY", "DD/MM/YY"];
+const contentvvv = ref("");
 
 const user_id = ref(route?.query?.user_id);
 watch(route, (val) => {
   if (val?.query?.user_id) user_id.value = val?.query?.user_id;
 });
 
+
 const listGenders = ref([
   {
     value: "0",
-    label: "Male",
+    label: "Nam",
   },
   {
     value: "1",
-    label: "Female",
+    label: "Nữ",
   },
   {
     value: "2",
-    label: "Other",
+    label: "Khác",
   },
 ]);
 
@@ -568,19 +573,18 @@ const dataProfile = ref({
     instagram_url: "",
   },
   infor: {
-    full_name: "Nguyen Dang Duc",
-    gender: "0",
-    day: "16",
-    month: "04",
-    year: "2001",
+    full_name: "",
+    gender: "",
+    day: "",
+    month: "",
+    year: "",
     birthday_inder: "",
-    email: "ducden164@gmail.com",
-    address: "Phuc Cau village, Thuy Huong commune, Chuong My district, Hanoi city",
-    phone_number: "0967771606",
-    position_application: "Fullstack Developer",
-    work_experience: "2 year",
-    active: 0,
-    type: "admin",
+    email: "",
+    address: "",
+    phone_number: "",
+    position_application: "",
+    work_experience: "",
+    type: "",
   },
   content: [
     {
@@ -774,8 +778,13 @@ const handleGetInfor = async (id) => {
     const res = await getInforApi(id);
     if (res) {
       dataProfile.value = res;
-      const newPathImg = dataProfile.value.infor.avatar_url.replace("public", "storage");
-      dataProfile.value.infor.avatar_url = newPathImg;
+      if (dataProfile.value.infor.avatar_url) {
+        const newPathImg = dataProfile.value.infor.avatar_url.replace(
+          "public",
+          "storage"
+        );
+        dataProfile.value.infor.avatar_url = newPathImg;
+      }
     }
   } catch (error) {
     toast.error(error.message);

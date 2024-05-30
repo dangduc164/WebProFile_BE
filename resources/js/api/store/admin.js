@@ -10,6 +10,8 @@ export const loginApi = async (data) =>
     });
 export const logoutApi = async () => api.post(apiConstants.AUTH.LOGOUT);
 
+export const registerApi = async (data) => api.post(apiConstants.AUTH.REGISTER, data);
+
 //[GET] methods
 export const getInforApi = async (id) => api.get(`/admin/${id}/info-user`);
 

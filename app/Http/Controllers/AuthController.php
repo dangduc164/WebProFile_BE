@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\InformationUser;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -60,16 +61,15 @@ class AuthController extends Controller
      */
     public function logout()
     {
-        // auth()->logout();
+        auth()->logout();
 
         // return response()->json(['message' => 'User successfully signed out']);
 
-        dd(auth());
-        try {
-            auth()->logout();
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Logout failed: ' . $e->getMessage()], 500);
-        }
+        // try {
+        //     auth()->logout();
+        // } catch (\Exception $e) {
+        //     return response()->json(['error' => 'Logout failed: ' . $e->getMessage()], 500);
+        // }
 
         return response()->json(['message' => 'User successfully signed out']);
     }
@@ -93,9 +93,9 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|between:2,100',
             'email' => 'required|string|email|max:100|unique:users',
-            'password' => 'required|string|min:6',
+            'password' => 'required|string|min:8',
+            'confirm_password' => 'required|string|min:8|same:password'
         ]);
 
         if ($validator->fails()) {
@@ -105,7 +105,8 @@ class AuthController extends Controller
         $user = User::create(array_merge(
             $validator->validated(),
             ['password' => bcrypt($request->password)],
-            ['active' => 0]
+            ['active' => 0],
+            ['type' => 'admin']
         ));
 
         return response()->json([

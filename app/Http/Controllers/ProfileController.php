@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfilesConentRequest;
+use App\Models\InformationUser;
 use App\Models\ProfilesAvatar;
 use App\Models\ProfilesContent;
 use App\Models\ProfilesSocial;
@@ -150,13 +151,16 @@ class ProfileController extends Controller
                 $dataInfor = User::select(
                     'users.*',
                     'profiles_avatars.avatar_url',
+                    'information_users.*',
                     // 'profiles_contents.*'
                 )
                     ->leftJoin('profiles_avatars', 'users.id', '=', 'profiles_avatars.user_id')
+                    ->leftJoin('information_users', 'users.id', '=', 'information_users.user_id')
                     // ->leftJoin('profiles_contents', 'users.id', '=', 'profiles_contents.user_id')
                     ->where('users.id', $id)
                     ->get()
                     ->toArray();
+
                 $dataContent = ProfilesContent::where('user_id', $id)->orderBy('order_number', 'asc')->get()->toArray();
 
                 $dataSocial = ProfilesSocial::select(
@@ -188,14 +192,15 @@ class ProfileController extends Controller
     public function createOrUpdate(Request $request, $id)
     {
         $infor = $request->infor;
-        $newInfor = User::updateOrCreate(
+        $newInfor = InformationUser::updateOrCreate(
             [
-                'id'   => $id,
+                'user_id'   => $id,
             ],
             [
-                'active' => $infor['active'],
+                'email' => $infor['email'],
                 'full_name' => $infor['full_name'],
                 'work_experience' => $infor['work_experience'],
+                'position_application' => $infor['position_application'],
                 'phone_number' => $infor['phone_number'],
                 'day' => $infor['day'],
                 'month' => $infor['month'],
@@ -222,7 +227,6 @@ class ProfileController extends Controller
         );
 
         ProfilesContent::where('user_id', $id)->delete();
-
         $newContent = [];
         foreach ($request['content'] as $item) {
             $newItem = ProfilesContent::insert([

@@ -88,10 +88,11 @@
         <div class="mt-4 flex items-center justify-between">
           <span class="border-b w-1/5 md:w-1/4"></span>
           <router-link
-            to="/register"
+            :to="ROUTER_PATH.REGISTER"
             class="text-xs text-gray-500 uppercase skin-text-link"
-            >or sign up</router-link
           >
+            or sign up
+          </router-link>
           <span class="border-b w-1/5 md:w-1/4"></span>
         </div>
       </div>

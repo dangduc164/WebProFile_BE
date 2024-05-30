@@ -25,7 +25,14 @@ const routes = [
             middleware: [(context) => guest(context, TYPE_USER.ADMIN)],
         },
     },
-    { path: "/admin/register", component: Register },
+    {
+        path: "/admin/register",
+        name: "adminRegister",
+        component: Register,
+        meta: {
+            middleware: [(context) => guest(context, TYPE_USER.ADMIN)],
+        },
+    },
     { path: "/admin/forget-password", component: ForgetPasssword },
     { path: "/:pathMatch(.*)*", component: NotFound },
 ];

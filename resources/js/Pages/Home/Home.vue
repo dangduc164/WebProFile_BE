@@ -18,7 +18,7 @@
                     class="h-[150px] w-[150px] bg-slate-200 relative hover-avatar max-w-[150px] max-h-[150px] overflow-hidden rounded-full"
                   >
                     <img
-                      :src="dataProfile?.infor?.avatar_url"
+                      :src="`data:image/png;base64, ${dataProfile?.infor?.image_avatar}`"
                       alt="avatar"
                       class="rounded-full w-[150px] h-[150px] object-cover max-w-[150px] max-h-[150px]"
                       width="{150}"
@@ -473,18 +473,7 @@
                           maxlength="255"
                         />
                       </h3>
-                      <Field
-                        :id="`desc-${index}`"
-                        class="w-full border border-gray-300 min-h-[150px] p-2 skin-input rounded-md resize-y h-auto js-resize-y-textarea"
-                        type="text"
-                        as="textarea"
-                        :name="`desc-${index}`"
-                        v-model="item.description"
-                        @keypress.passive="
-                          handleResizeTextarea(`desc-${index}`, item.desc)
-                        "
-                      />
-                      <Vue2Editor v-model="item.description" />
+                      <TextEditor v-model="item.description"/>
                     </div>
                     <div>
                       <button
@@ -530,8 +519,7 @@ import moment from "moment/moment";
 import { useStore } from "vuex";
 import { MODULE_STORE } from "@/const";
 import { useRoute } from "vue-router";
-// import TextEditor from "@/Components/TextEditor";
-import Vue2Editor from "vue2-editor";
+import TextEditor from "../../Components/TextEditor/TextEditor.vue";
 
 import { uploadAvatarApi, createOrUpdateApi, getInforApi } from "@/api";
 
@@ -541,13 +529,11 @@ const route = useRoute();
 const toast = inject("$toast");
 const typeImage = ref("");
 const dateFormatList = ["DD/MM/YYYY", "DD/MM/YY"];
-const contentvvv = ref("");
 
 const user_id = ref(route?.query?.user_id);
 watch(route, (val) => {
   if (val?.query?.user_id) user_id.value = val?.query?.user_id;
 });
-
 
 const listGenders = ref([
   {
@@ -778,12 +764,8 @@ const handleGetInfor = async (id) => {
     const res = await getInforApi(id);
     if (res) {
       dataProfile.value = res;
-      if (dataProfile.value.infor.avatar_url) {
-        const newPathImg = dataProfile.value.infor.avatar_url.replace(
-          "public",
-          "storage"
-        );
-        dataProfile.value.infor.avatar_url = newPathImg;
+      if (dataProfile.value.infor.image_avatar) {
+        readTextFile(dataProfile.value.infor.image_avatar);
       }
     }
   } catch (error) {
@@ -791,6 +773,20 @@ const handleGetInfor = async (id) => {
   } finally {
     store.state[MODULE_STORE.COMMON.NAME].isLoadingPage = false;
   }
+};
+
+const readTextFile = (file) => {
+  const rawFile = new XMLHttpRequest();
+  rawFile.open("GET", file, false);
+  rawFile.onreadystatechange = function () {
+    if (rawFile.readyState === 4) {
+      if (rawFile.status === 200 || rawFile.status == 0) {
+        const allText = rawFile.responseText;
+        dataProfile.value.infor.image_avatar = allText;
+      }
+    }
+  };
+  rawFile.send(null);
 };
 
 watch(

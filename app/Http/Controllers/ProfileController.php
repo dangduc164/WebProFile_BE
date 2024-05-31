@@ -23,6 +23,12 @@ class ProfileController extends Controller
     public function uploadAvatar(Request $request): JsonResponse
     {
 
+        $existingAvatarPath = ProfilesAvatar::where('user_id', $request->user_id)->value('image_avatar');
+
+        if ($existingAvatarPath) {
+            unlink($existingAvatarPath);
+        }
+
         if (!$request->hasFile('file')) {
             return response()->json([
                 'status' => 400,
@@ -42,30 +48,33 @@ class ProfileController extends Controller
         $file = $request->file('file');
         $extension = strtolower($file->getClientOriginalExtension());
         $checkExtension = in_array($extension, $allowedFileExtension);
-        $path = $file->store('public/images/avatar');
+
+
+
+        $image = base64_encode(file_get_contents($request->file('file')));
+
+        $filename = uniqid('', true) . '.txt';
+
+        // Define storage path
+        $storagePath = 'assets/images/avatar/';
+        if (!is_dir($storagePath)) {
+            mkdir($storagePath, 0755, true);
+        }
+
+        $filePath = $storagePath . $filename;
+        file_put_contents($filePath, $image);
+
 
         if (!$checkExtension) {
             return response()->json(['invalid_file_format'], 422);
         }
-
-        // Get existing profile avatar (if any)
-        $existingAvatar = ProfilesAvatar::where('user_id', $request->user_id)->first();
-        if ($existingAvatar) {
-            $avatar_url_old = $existingAvatar->avatar_url ?? '';
-
-            // Delete old file if it exists
-            if (file_exists($avatar_url_old)) {
-                unlink($avatar_url_old);
-            }
-        }
-
 
         $informationImage = getimagesize($file);
 
         // Save profile avatar information
         $profileAvatar = ProfilesAvatar::updateOrCreate(
             ['user_id' => $request->user_id],
-            ['avatar_url' => $path]
+            ['image_avatar' => $filePath]
         );
 
         $response = [
@@ -73,10 +82,10 @@ class ProfileController extends Controller
             'message' => 'Upload success',
             'information' => $informationImage,
             'user_id' => $request->user_id,
-            'path_file' => $path,
             'type' => $type,
             'length' => filesize($file),
             'extension' => $extension,
+            'image_avatar' => $filePath,
         ];
 
         return response()->json($response);
@@ -150,7 +159,7 @@ class ProfileController extends Controller
                 }
                 $dataInfor = User::select(
                     'users.*',
-                    'profiles_avatars.avatar_url',
+                    'profiles_avatars.image_avatar',
                     'information_users.*',
                     // 'profiles_contents.*'
                 )

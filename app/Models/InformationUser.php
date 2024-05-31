@@ -27,6 +27,7 @@ class InformationUser extends Model
         'email',
         'phone_number',
         'work_experience',
+        'position_application',
     ];
 
 

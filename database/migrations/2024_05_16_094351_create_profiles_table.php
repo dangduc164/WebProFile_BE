@@ -38,7 +38,7 @@ return new class extends Migration
         Schema::create('profiles_avatars', function (Blueprint $table) {
             $table->id();
             $table->string('user_id');
-            $table->string('avatar_url')->nullable();
+            $table->text('image_avatar')->nullable();
             $table->timestamps();
         });
     }

@@ -11,7 +11,7 @@ class ProfilesAvatar extends Model
 
     protected $fillable = [
         'user_id',
-        'avatar_url',
+        'image_avatar',
     ];
 
     protected $casts = [

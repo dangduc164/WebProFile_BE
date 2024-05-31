@@ -6,6 +6,7 @@ import VueToast from "vue-toast-notification";
 import "vue-toast-notification/dist/theme-sugar.css";
 import store from "@/store";
 
+
 const app = createApp(App);
 app.config.productionTip = false;
 app.use(router);

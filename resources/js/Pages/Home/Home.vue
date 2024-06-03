@@ -4,7 +4,7 @@
       <Form
         v-slot="{ handleSubmit }"
         :initial-values="dataProfile"
-        :validation-schema="schemaDataProfile"
+        :validation-schema="schema"
         class="w-full"
       >
         <div class="flex flex-wrap gutters-sm mx-[-1rem]">
@@ -47,6 +47,7 @@
                         placeholder="Frontend develop"
                         v-model="dataProfile.infor.position_application"
                       />
+                      <ErrorMessage class="text-red-500" name="position_application" />
                     </p>
                     <p class="text-gray-600 mb-1">
                       <Field
@@ -56,6 +57,7 @@
                         placeholder="Frontend develop"
                         v-model="dataProfile.infor.work_experience"
                       />
+                      <ErrorMessage class="text-red-500" name="work_experience" />
                     </p>
                   </div>
                 </div>
@@ -303,6 +305,7 @@
                       v-model="dataProfile.infor.full_name"
                       name="full_name"
                     />
+                    <ErrorMessage class="text-red-500 block pt-1" name="full_name" />
                   </div>
                 </div>
                 <hr />
@@ -310,66 +313,73 @@
                   <div class="w-1/4 px-2 md:px-4">
                     <h6 class="mb-0">Ngày sinh</h6>
                   </div>
-                  <div class="w-3/4 text-gray-600 flex items-center gap-2">
-                    <Field
-                      class="w-full px-2 md:px-4 skin-input rounded-md"
-                      type="text"
-                      as="select"
-                      v-model="dataProfile.infor.day"
-                      name="day"
-                      :class="{ no_value: dataProfile.infor.day == '' }"
-                    >
-                      <option value="" hidden disabled selected>31</option>
-                      <option
-                        v-for="(item, index) in daysArray"
-                        :key="index"
-                        :value="item"
-                        :checked="dataProfile.infor.day === item"
-                        class="text-[#222]"
+                  <div class="w-3/4">
+                    <div class="flex items-center gap-2">
+                      <Field
+                        class="w-full px-2 md:px-4 skin-input rounded-md"
+                        type="text"
+                        as="select"
+                        v-model="dataProfile.infor.day"
+                        name="day"
+                        :class="{ no_value: dataProfile.infor.day == '' }"
                       >
-                        {{ item }}
-                      </option>
-                    </Field>
-                    <Field
-                      class="w-full px-2 md:px-4 skin-input rounded-md"
-                      type="text"
-                      as="select"
-                      v-model="dataProfile.infor.month"
-                      name="month"
-                      @change="handleCheckDay"
-                      :class="{ no_value: dataProfile.infor.month == '' }"
-                    >
-                      <option value="" hidden disabled selected>12</option>
-                      <option
-                        v-for="(item, index) in months"
-                        :key="index"
-                        :value="item"
-                        :checked="dataProfile.infor.month === item"
-                        class="text-[#222]"
+                        <option value="" hidden disabled selected>31</option>
+                        <option
+                          v-for="(item, index) in daysArray"
+                          :key="index"
+                          :value="item"
+                          :checked="dataProfile.infor.day === item"
+                          class="text-[#222]"
+                        >
+                          {{ item }}
+                        </option>
+                      </Field>
+                      <Field
+                        class="w-full px-2 md:px-4 skin-input rounded-md"
+                        type="text"
+                        as="select"
+                        v-model="dataProfile.infor.month"
+                        name="month"
+                        @change="handleCheckDay"
+                        :class="{ no_value: dataProfile.infor.month == '' }"
                       >
-                        {{ item }}
-                      </option>
-                    </Field>
-                    <Field
-                      class="w-full px-2 md:px-4 skin-input rounded-md"
-                      type="text"
-                      as="select"
-                      v-model="dataProfile.infor.year"
-                      name="year"
-                      @change="handleCheckDay"
-                      :class="{ no_value: dataProfile.infor.year == '' }"
-                    >
-                      <option value="" hidden disabled selected>1990</option>
-                      <option
-                        v-for="(item, index) in birthYears"
-                        :key="index"
-                        :value="item"
-                        :checked="dataProfile.infor.year === item"
-                        class="text-[#222]"
+                        <option value="" hidden disabled selected>12</option>
+                        <option
+                          v-for="(item, index) in months"
+                          :key="index"
+                          :value="item"
+                          :checked="dataProfile.infor.month === item"
+                          class="text-[#222]"
+                        >
+                          {{ item }}
+                        </option>
+                      </Field>
+                      <Field
+                        class="w-full px-2 md:px-4 skin-input rounded-md"
+                        type="text"
+                        as="select"
+                        v-model="dataProfile.infor.year"
+                        name="year"
+                        @change="handleCheckDay"
+                        :class="{ no_value: dataProfile.infor.year == '' }"
                       >
-                        {{ item }}
-                      </option>
-                    </Field>
+                        <option value="" hidden disabled selected>1990</option>
+                        <option
+                          v-for="(item, index) in birthYears"
+                          :key="index"
+                          :value="item"
+                          :checked="dataProfile.infor.year === item"
+                          class="text-[#222]"
+                        >
+                          {{ item }}
+                        </option>
+                      </Field>
+                    </div>
+                    <div>
+                      <ErrorMessage class="text-red-500 block pt-1" name="day" />
+                      <ErrorMessage class="text-red-500 block pt-1" name="month" />
+                      <ErrorMessage class="text-red-500 block pt-1" name="year" />
+                    </div>
                   </div>
                 </div>
                 <hr />
@@ -397,6 +407,7 @@
                         {{ item.label }}
                       </option>
                     </Field>
+                    <ErrorMessage class="text-red-500 block pt-1" name="gender" />
                   </div>
                 </div>
                 <hr />
@@ -411,6 +422,7 @@
                       v-model="dataProfile.infor.email"
                       name="email"
                     />
+                    <ErrorMessage class="text-red-500 block pt-1" name="email" />
                   </div>
                 </div>
                 <hr />
@@ -425,6 +437,7 @@
                       v-model="dataProfile.infor.phone_number"
                       name="phone_number"
                     />
+                    <ErrorMessage class="text-red-500 d-lock pt-1" name="phone_number" />
                   </div>
                 </div>
                 <hr />
@@ -445,6 +458,7 @@
                         handleResizeTextarea('address', dataProfile.infor.address)
                       "
                     />
+                    <ErrorMessage class="text-red-500 d-lock pt-1" name="address" />
                   </div>
                 </div>
                 <hr />
@@ -473,7 +487,7 @@
                           maxlength="255"
                         />
                       </h3>
-                      <TextEditor v-model="item.description"/>
+                      <TextEditor v-model="item.description" />
                     </div>
                     <div>
                       <button
@@ -513,13 +527,14 @@
 
 <script setup>
 import { ref, inject, computed, watch } from "vue";
-import { Field, Form } from "vee-validate";
+import { Field, Form, ErrorMessage } from "vee-validate";
 import draggable from "vuedraggable";
 import moment from "moment/moment";
 import { useStore } from "vuex";
 import { MODULE_STORE } from "@/const";
 import { useRoute } from "vue-router";
 import TextEditor from "../../Components/TextEditor/TextEditor.vue";
+import * as Yup from "yup";
 
 import { uploadAvatarApi, createOrUpdateApi, getInforApi } from "@/api";
 
@@ -580,6 +595,26 @@ const dataProfile = ref({
     },
   ],
 });
+
+const regexEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+const regexPhone = /^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/;
+const schema = Yup.object().shape({
+  full_name: Yup.string().trim().required("Vui lòng nhập họ và tên"),
+  day: Yup.string().trim().required("ngày sinh không được để trống"),
+  month: Yup.string().trim().required("ngày sinh không được để trống"),
+  year: Yup.string().trim().required("ngày sinh không được để trống"),
+  gender: Yup.string().trim().required("giới tính không được để trống"),
+  email: Yup.string()
+    .trim()
+    .matches(regexEmail, "Email không hợp lệ")
+    .required("Email không được để trống"),
+  address: Yup.string().trim().required("Nhập địa chỉ cửa bạn"),
+  phone_number: Yup.string()
+    .trim()
+    .matches(regexPhone, "Số điện thoại hợp lệ")
+    .required("Vui lòng nhập số điện thoại của bạn"),
+});
+
 const handleAddRowContent = () => {
   dataProfile.value.content.push({
     title: "",
@@ -806,5 +841,8 @@ watch(
 <style lang="scss" scoped>
 .no_value {
   color: #ccc;
+}
+span[role="alert"] + span[role="alert"] {
+    display: none;
 }
 </style>

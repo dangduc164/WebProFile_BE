@@ -198,6 +198,62 @@ class ProfileController extends Controller
     }
 
 
+    public function getInforCustomer($id): JsonResponse
+    {
+
+        try {
+            if ($id) {
+                $dataUser = User::find($id)->get()->toArray();
+                if (empty($dataUser)) {
+                    $response = [
+                        'user' => null,
+                        'message' => 'Not found user'
+                    ];
+                    return response()->json($response, 404);
+                }
+                $dataInfor = User::select(
+                    'users.*',
+                    'profiles_avatars.image_avatar',
+                    'information_users.*',
+                    // 'profiles_contents.*'
+                )
+                    ->leftJoin('profiles_avatars', 'users.id', '=', 'profiles_avatars.user_id')
+                    ->leftJoin('information_users', 'users.id', '=', 'information_users.user_id')
+                    // ->leftJoin('profiles_contents', 'users.id', '=', 'profiles_contents.user_id')
+                    ->where('users.id', $id)
+                    ->get()
+                    ->toArray();
+
+                $dataContent = ProfilesContent::where('user_id', $id)->orderBy('order_number', 'asc')->get()->toArray();
+
+                $dataSocial = ProfilesSocial::select(
+                    'profiles_socials.facebook_url',
+                    'profiles_socials.zalo_url',
+                    'profiles_socials.github_url',
+                    'profiles_socials.instagram_url',
+                    'profiles_socials.twitter_url',
+                )
+                    ->where('profiles_socials.user_id', $id)
+                    ->get()
+                    ->toArray();
+
+
+                $response = [
+                    'data' => [
+                        'infor' => $dataInfor[0],
+                        'content' => $dataContent,
+                        'link_social' => $dataSocial[0],
+                    ]
+                ];
+                return response()->json($response, 200);
+            }
+        } catch (Exception $e) {
+            // Handle database errors here (e.g., log the error, return a generic error response)
+
+        }
+    }
+
+
     public function createOrUpdate(Request $request, $id)
     {
         $infor = $request->infor;

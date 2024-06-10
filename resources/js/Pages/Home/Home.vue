@@ -18,7 +18,7 @@
                     class="h-[150px] w-[150px] bg-slate-200 relative hover-avatar max-w-[150px] max-h-[150px] overflow-hidden rounded-full"
                   >
                     <img
-                      :src="`data:image/png;base64, ${dataProfile?.infor?.image_avatar}`"
+                      :src="dataProfile?.infor?.image_avatar"
                       alt="avatar"
                       class="rounded-full w-[150px] h-[150px] object-cover max-w-[150px] max-h-[150px]"
                       width="{150}"
@@ -799,9 +799,9 @@ const handleGetInfor = async (id) => {
     const res = await getInforApi(id);
     if (res) {
       dataProfile.value = res;
-      if (dataProfile.value.infor.image_avatar) {
-        readTextFile(dataProfile.value.infor.image_avatar);
-      }
+    //   if (dataProfile.value.infor.image_avatar) {
+    //     readTextFile(dataProfile.value.infor.image_avatar);
+    //   }
     }
   } catch (error) {
     toast.error(error.message);
@@ -810,19 +810,19 @@ const handleGetInfor = async (id) => {
   }
 };
 
-const readTextFile = (file) => {
-  const rawFile = new XMLHttpRequest();
-  rawFile.open("GET", file, false);
-  rawFile.onreadystatechange = function () {
-    if (rawFile.readyState === 4) {
-      if (rawFile.status === 200 || rawFile.status == 0) {
-        const allText = rawFile.responseText;
-        dataProfile.value.infor.image_avatar = allText;
-      }
-    }
-  };
-  rawFile.send(null);
-};
+// const readTextFile = (file) => {
+//   const rawFile = new XMLHttpRequest();
+//   rawFile.open("GET", file, false);
+//   rawFile.onreadystatechange = function () {
+//     if (rawFile.readyState === 4) {
+//       if (rawFile.status === 200 || rawFile.status == 0) {
+//         const allText = rawFile.responseText;
+//         dataProfile.value.infor.image_avatar = allText;
+//       }
+//     }
+//   };
+//   rawFile.send(null);
+// };
 
 watch(
   route,

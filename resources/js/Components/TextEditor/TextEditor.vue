@@ -11,12 +11,27 @@ watch(props, () => {
   }
 });
 
+const buttonPlugins = 'emoticons preview searchreplace autolink directionality visualblocks visualchars fullscreen image link media code codesample table charmap hr pagebreak nonbreaking anchor insertdatetime advlist lists wordcount textpattern autosave '
+
+// Import Toolbar
+const toolbar = 'fullscreen undo redo restoredraft | cut copy paste pastetext | forecolor backcolor bold italic underline strikethrough link anchor \ table image | alignleft aligncenter alignright alignjustify outdent indent | \ styleselect formatselect fontselect fontsizeselect | bullist numlist | blockquote subscript superscript removeformat | media charmap emoticons hr pagebreak insertdatetime print preview | code selectall searchreplace visualblocks | indent2em lineheight formatpainter axupimgs'
+
+
 const init = reactive({
-  fontsize_formats: "8p 10px 12px 14px 16px 18px 20px 22px 24px 28px 32px 36px 48px 56px 72px",
+  fontsize_formats: "8px 10px 12px 14px 16px 18px 20px 22px 24px 28px 32px 36px 48px 56px 72px",
   statusbar: false,
-  plugins: 'autoresize',
-  autoresize_bottom_margin: 0,
-  content_css: ''
+  resize: false,
+  cleanup: true,
+//   plugins: 'autoresize',
+//   autoresize_bottom_margin: 0,
+  content_css: '',
+//   selector: 'textarea#default-editor',
+  plugins: buttonPlugins,
+  toolbar: toolbar,
+  paste_data_images: true,
+  images_upload_handler: (blobInfo, success, failure) => {
+  // Need to rewrite in setup and pass in url
+  }
 });
 </script>
 

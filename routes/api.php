@@ -36,7 +36,7 @@ Route::group(['prefix' => 'admin'], function () {
 });
 
 
-Route::get('/generate-pdf', [ExportPdfController::class, 'generatePdf'])->name('generate-pdf');
+Route::put('/generate-pdf', [ExportPdfController::class, 'generatePdf'])->name('generate-pdf');
 
 Route::get('/{id}/info-customer', [ProfileController::class, 'getInforCustomer'])->name('info-customer');
 

@@ -23,10 +23,12 @@ class ProfileController extends Controller
     public function uploadAvatar(Request $request): JsonResponse
     {
 
-        $existingAvatarPath = ProfilesAvatar::where('user_id', $request->user_id)->value('image_avatar');
+        $data = ProfilesAvatar::where('user_id', $request->user_id)->get()->toArray();
 
-        if ($existingAvatarPath) {
-            unlink($existingAvatarPath);
+        $old_img_avatar = $data[0]['image_avatar'];
+
+        if (file_exists($old_img_avatar)) {
+            unlink($old_img_avatar);
         }
 
         if (!$request->hasFile('file')) {
@@ -48,22 +50,8 @@ class ProfileController extends Controller
         $file = $request->file('file');
         $extension = strtolower($file->getClientOriginalExtension());
         $checkExtension = in_array($extension, $allowedFileExtension);
-
-
-
-        $image = base64_encode(file_get_contents($request->file('file')));
-
-        $filename = uniqid('', true) . '.txt';
-
-        // Define storage path
-        $storagePath = 'assets/images/avatar/';
-        if (!is_dir($storagePath)) {
-            mkdir($storagePath, 0755, true);
-        }
-
-        $filePath = $storagePath . $filename;
-        file_put_contents($filePath, $image);
-
+        $path = $file->store('public/images/avatar');
+        $filePath = Storage::url($path);
 
         if (!$checkExtension) {
             return response()->json(['invalid_file_format'], 422);

@@ -9,6 +9,7 @@ class ExportPdfServices
     public function generate($html)
     {
         $pdf =  Pdf::loadHTML($html);
+
         return $pdf;
     }
 }
